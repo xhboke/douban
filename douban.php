@@ -1,52 +1,17 @@
 <?php
 /**
  * @author <xhboke>
- * @since <2.0.0>
+ * @since <3.0.0>
  * @GitHub https://github.com/xhboke/douban
  */
-header("Access-Control-Allow-Origin:*");
-header("Content-type: text/json; charset=utf-8");
-
-$Type = isset($_GET['type']) ? $_GET['type'] : '';
-$douban = new douban;
-if ($Type == 'movie') {
-    $mode = isset($_GET['mode']) ? $_GET['mode'] : exit(); //'热门','最新','经典'
-    $sort = isset($_GET['sort']) ? $_GET['sort'] : exit(); //热度：recommend时间：time 评价：rank
-    $page = isset($_GET['page']) ? $_GET['page'] : exit; //热度：recommend时间：time 评价：rank
-    $douban->Movie($mode, $sort, '24', $page);
-    print_r(json_encode($douban->GetMovieArr));
-} elseif ($Type == 'tv') {
-    $mode = isset($_GET['mode']) ? $_GET['mode'] : ''; //'热门','美剧','英剧'
-    $sort = isset($_GET['sort']) ? $_GET['sort'] : ''; //热度：recommend时间：time 评价：rank
-    $page = isset($_GET['page']) ? $_GET['page'] : exit; //热度：recommend时间：time 评价：rank
-    $douban->Tv($mode, $sort, '24', $page);
-    print_r(json_encode($douban->GetTvArr));
-} elseif ($Type == 'info') {
-    $Id = isset($_GET['id']) ? $_GET['id'] : exit;
-    $douban->IdInfo($Id);
-    print_r(json_encode($douban->IdInfoData));
-} elseif ($Type == 'reviews') {
-    $Id = isset($_GET['id']) ? $_GET['id'] : exit;
-    $PageCount = isset($_GET['page']) ? $_GET['page'] : '';
-    $douban->IdReviews($Id, $PageCount);
-    print_r(json_encode($douban->IdReviewData));
-} elseif ($Type == 'search') {
-    $SearchName = isset($_GET['s']) ? $_GET['s'] : exit();
-    $PageCount = isset($_GET['page']) ? $_GET['page'] : '';
-    $douban->Search($SearchName, $PageCount);
-    print_r($douban->SearchData);
-} else {
-    exit;
-}
-
-
-
 class douban
 {
     var $SearchData;
     var $IdInfoData;
     var $IdReviewData;
-    var $IdPhotosData;
+    var $tagData;
+    var $celebrityData;
+    var $top250Data;
     var $GetMovieArr;
     var $GetTvArr;
     /*
@@ -69,13 +34,13 @@ class douban
             $SearchData['status'] = 0;
             $SearchData['Count'] = $ApiData->count;
             for ($x = 0; $x < count($ReturnId[1]); $x++) {
-                $SearchData['Data'][$x]['Id'] = $ReturnId[1][$x];
-                $SearchData['Data'][$x]['Name'] = $ReturnName[1][$x];
-                $SearchData['Data'][$x]['Img'] = $ReturnImg[1][$x];
-                $SearchData['Data'][$x]['Rating'] = $ReturnRating[1][$x];
+                $SearchData['Data'][$PageCount * 10 + $x]['Id'] = $ReturnId[1][$x];
+                $SearchData['Data'][$PageCount * 10 + $x]['Name'] = $ReturnName[1][$x];
+                $SearchData['Data'][$PageCount * 10 + $x]['Img'] = $ReturnImg[1][$x];
+                $SearchData['Data'][$PageCount * 10 + $x]['Rating'] = $ReturnRating[1][$x];
             }
         }
-        $this->SearchData = json_encode($SearchData);
+        $this->SearchData = json_encode($SearchData, JSON_UNESCAPED_UNICODE | JSON_FORCE_OBJECT);
     }
 
 
@@ -84,6 +49,7 @@ class douban
         $IdUrl = 'https://movie.douban.com/subject/' . $Id . '/';
         $UrlData = self::http_get($IdUrl);
         $ReturnData['info'] = self::IdInfoArr($UrlData);
+        $ReturnData['info'] = array_merge(['Id' => $Id], $ReturnData['info']);
         $ReturnData['url'] = self::GetEpisodeUrl($UrlData);
         $ReturnData['recommend'] = self::Get_recommen_dations($UrlData);
         $this->IdInfoData = $ReturnData;
@@ -96,7 +62,8 @@ class douban
         preg_match_all('#"datePublished": "([\s\S]*?)",#', $UrlData, $PlayDatapublish);
         preg_match_all('#property="v:average">([\s\S]*?)<\/strong>#', $UrlData, $PlayRating);
         preg_match_all('#"image": "([\s\S]*?)",#', $UrlData, $PlayImg);
-        preg_match_all('#"name": "([\s\S]*?)"#', self::GetSubstr($UrlData, '"actor":', 'datePublished'), $PlayActor);
+        preg_match_all('#<a href="/celebrity/(.*?)\/" rel="v:starring">([\s\S]*?)<\/a>#', $UrlData, $PlayActor);
+        preg_match_all('#<a href="/celebrity/(.*?)\/" rel="v:directedBy">([\s\S]*?)<\/a>#', $UrlData, $PlayDirector);
         preg_match_all('#<span property="v:votes">([\s\S]*?)<\/span>#', $UrlData, $PlayVotes);
         preg_match_all('#<span class="year">([\s\S]*?)<\/span>#', $UrlData, $PlayYear);
         //preg_match_all('#<span property="v:runtime" content="([\s\S]*?)">#', $UrlData, $PlayRuntime);
@@ -105,15 +72,25 @@ class douban
         } else {
             preg_match_all('#<span property="v:summary" class="">([\s\S]*?)<\/span>#', $UrlData, $PlayDesc);
         }
+        for ($i = 0; $i < count($PlayActor[1]); $i++) {
+            $Play_Actor[$i]['Id'] = $PlayActor[1][$i];
+            $Play_Actor[$i]['Name'] = $PlayActor[2][$i];
+        }
+        for ($i = 0; $i < count($PlayDirector[1]); $i++) {
+            $Play_Director[$i]['Id'] = $PlayDirector[1][$i];
+            $Play_Director[$i]['Name'] = $PlayDirector[2][$i];
+        }
         $IdInfoData['Name'] = $PlayName[1][0];
         $IdInfoData['PlayDesc'] = trim($PlayDesc[1][0]);
         $IdInfoData['DatePublished'] = $PlayDatapublish[1][0];
         $IdInfoData['Genre'] = $PlayGenre[1];
         $IdInfoData['Rating'] = floatval($PlayRating[1][0]);
+        $IdInfoData['PlayVotes'] = $PlayVotes[1][0];
         $IdInfoData['PlayImg'] = $PlayImg[1][0];
         $IdInfoData['PlayYear'] = $PlayYear[1][0];
-        $IdInfoData['PlayActor'] = $PlayActor[1];
-        $IdInfoData['PlayVotes'] = $PlayVotes[1][0];
+        $IdInfoData['PlayActor'] = $Play_Actor;
+        $IdInfoData['Director'] = $Play_Director;
+
         return $IdInfoData;
     }
 
@@ -176,21 +153,21 @@ class douban
 
     public function Get_recommen_dations($UrlData)
     {
-        $parmsId = '#<a href="https:\/\/movie.douban.com\/subject\/(.*?)\/\?from=subject-page" class="" >#';
+        $parmsId = '#<a href="https:\/\/movie.douban.com\/subject\/(.*?)\/\?from=subject-page" class=""#';
         $parmsImg = '#<img src="(.*?)" alt="(.*?)" class=""#';
 
         preg_match_all($parmsId, self::GetSubstr($UrlData, '<div id="recommendations" class="">', '<div id="comments-section">'), $recommen_dation_id);
         preg_match_all($parmsImg, self::GetSubstr($UrlData, '<div id="recommendations" class="">', '<div id="comments-section">'), $recommen_dation_img);
         for ($x = 0; $x < count($recommen_dation_id[1]); $x++) {
             $recommen_dations[$x]['Id'] = $recommen_dation_id[1][$x];
-            $recommen_dations[$x]['Name'] = $recommen_dation_img[1][$x];
-            $recommen_dations[$x]['Img'] = $recommen_dation_img[2][$x];
+            $recommen_dations[$x]['Name'] = $recommen_dation_img[2][$x];
+            $recommen_dations[$x]['Img'] = $recommen_dation_img[1][$x];
         }
         return $recommen_dations;
     }
 
 
-    public function IdReviews($Id, $ReviewsPageCount = '0')
+    public function IdReviews($Id, $ReviewsPageCount = 0)
     {
         $IdReviewsUrl = 'https://movie.douban.com/subject/' . $Id . '/comments?sort=new_score&status=P&limit=20&start=' . $ReviewsPageCount * 20;
         $IdReviewsData = self::http_get($IdReviewsUrl);
@@ -198,26 +175,97 @@ class douban
         preg_match_all('#<a title="(.*)" href="#', $IdReviewsData, $ReviewsAvatarList);
         preg_match_all('#<img src="(.*)" class="" />#', $IdReviewsData, $ReviewsImgList);
         preg_match_all('#<span class="allstar(.*)0 rating#', $IdReviewsData, $ReviewsRatingList);
-        $count = count($ReviewsAvatarList[1]);
+        $count =  count($ReviewsAvatarList[1]);
         for ($x = 0; $x < $count; $x++) {
-            $IdReviewData[$x]['Avatar'] = $ReviewsAvatarList[1][$x];
-            $IdReviewData[$x]['Img'] = $ReviewsImgList[1][$x];
-            $IdReviewData[$x]['Rating'] = floatval($ReviewsRatingList[1][$x]);
-            $IdReviewData[$x]['Content'] = $ReviewsContentList[1][$x];
+            $IdReviewData[20 * $ReviewsPageCount + $x]['Avatar'] = $ReviewsAvatarList[1][$x];
+            $IdReviewData[20 * $ReviewsPageCount + $x]['Img'] = $ReviewsImgList[1][$x];
+            $IdReviewData[20 * $ReviewsPageCount + $x]['Rating'] = floatval($ReviewsRatingList[1][$x]);
+            $IdReviewData[20 * $ReviewsPageCount + $x]['Content'] = $ReviewsContentList[1][$x];
         }
 
 
-        return $this->IdReviewData = $IdReviewData;
+        return $this->IdReviewData = json_encode($IdReviewData, JSON_UNESCAPED_UNICODE | JSON_FORCE_OBJECT);
     }
 
 
-
-    public function IdPhotos($Id, $PhotosType = 'S', $PhotosPageCount = '0')
+    public function Get_tag($sort = 'U', $tags = '', $page = 0, $genres = '', $countries = '', $year_range = '')
     {
-        $IdPhotosUrl = 'https://movie.douban.com/subject/' . $Id . '/photos?type=' . $PhotosType . '&start=' . $PhotosPageCount * 30;
-        $IdPhotosData = self::http_get($IdPhotosUrl);
-        preg_match_all('#<div class="cover">([\s\S]*?)<img src="(.*)" />#', $IdPhotosData, $IdPhotosList);
-        return $this->IdPhotosData = $IdPhotosList[2];
+        //https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=电影,经典&start=0&genres=剧情&countries=中国大陆&year_range=2020,2020
+        //https://movie.douban.com/j/new_search_subjects?sort=U&tags=&start=0&genres=&countries=&year_range=
+        //$sort = 'U', $tags = '', $page = 0, $genres = '', $countries = '', $year_range = ''
+        $page_start = $page * 20;
+        $tagUrl = 'https://movie.douban.com/j/new_search_subjects?sort=' . $sort . '&range=0,10&tags=' . $tags . '&start=' . $page_start . '&genres=' . $genres . '&countries=' . $countries . '&year_range=' . $year_range;
+        $apiData = json_decode(self::http_get($tagUrl), true);
+        $count = count($apiData['data']);
+        if ($count) {
+            $returnData['status'] = 0;
+            $returnData['count'] = $count;
+            for ($i = 0; $i < $count; $i++) {
+                $returnData['data'][$i]['id'] = $apiData['data'][$i]['id'];
+                $returnData['data'][$i]['title'] = $apiData['data'][$i]['title'];
+                $returnData['data'][$i]['cover'] = $apiData['data'][$i]['cover'];
+                $returnData['data'][$i]['rate'] = $apiData['data'][$i]['rate'];
+            }
+        } else {
+            $returnData['status'] = 1;
+            $returnData['count'] = 0;
+        }
+        return $this->tagData = json_encode($returnData, JSON_UNESCAPED_UNICODE | JSON_FORCE_OBJECT);
+    }
+
+    public function Get_celebrity($id)
+    {
+        $celebrityUrl = 'https://movie.douban.com/celebrity/' . $id . '/';
+        $celebrity_Data = self::http_get($celebrityUrl);
+        preg_match_all('#<h1>([\s\S]*?)<\/h1>#', $celebrity_Data, $Name);
+        preg_match_all('#<span>性别<\/span>:([\s\S]*?)<\/li>#', $celebrity_Data, $Sex);
+        preg_match_all('#<span>星座<\/span>:([\s\S]*?)<\/li>#', $celebrity_Data, $Constellation);
+        preg_match_all('#<span>出生日期<\/span>:([\s\S]*?)<\/li>#', $celebrity_Data, $BirthDay);
+        preg_match_all('#<span>出生地<\/span>:([\s\S]*?)<\/li>#', $celebrity_Data, $BirthPlace);
+        preg_match_all('#<span>职业<\/span>:([\s\S]*?)<\/li>#', $celebrity_Data, $Profession);
+        preg_match_all('#<span>更多外文名<\/span>:([\s\S]*?)<\/li>#', $celebrity_Data, $OtherName);
+        preg_match_all('#<span>家庭成员<\/span>:([\s\S]*?)<\/li>#', $celebrity_Data, $FamilyMember);
+        $Family_Member = preg_replace("/<a[^>]*>(.*?)<\/a>/is", "$1", $FamilyMember[1][0]);
+
+        
+        preg_match_all('#<span>官方网站<\/span>:([\s\S]*?)target="_blank">([\s\S]*?)<\/a>([\s\S]*?)<\/li>#', $celebrity_Data, $Website);
+
+        $ReturnData['Id'] = $id;
+        $ReturnData['Name'] = $Name[1][0];
+        $ReturnData['Sex'] = trim($Sex[1][0]);
+        $ReturnData['Constellation'] = trim($Constellation[1][0]);
+        $ReturnData['BirthDay'] = trim($BirthDay[1][0]);
+        $ReturnData['BirthPlace'] = trim($BirthPlace[1][0]);
+        $ReturnData['Profession'] = trim($Profession[1][0]);
+        $ReturnData['OtherName'] = trim($OtherName[1][0]);
+        $ReturnData['FamilyMember'] = trim($Family_Member);
+        $ReturnData['Website'] = trim($Website[2][0]);
+        if (strpos($celebrity_Data, '<span class="all hidden">') !== false) {
+            preg_match_all('#<span class="all hidden">([\s\S]*?)<\/span>#', $celebrity_Data, $Brief_introduction);
+            $ReturnData['Brief_introduction'] = trim($Brief_introduction[1][0]);
+        } else {
+            preg_match_all('#影人简介([\s\S]*?)<div class="bd">([\s\S]*?)<\/div>#', $celebrity_Data, $Brief_introduction);
+            $ReturnData['Brief_introduction'] = trim($Brief_introduction[2][0]);
+        }
+        return $this->celebrityData = json_encode($ReturnData, JSON_UNESCAPED_UNICODE | JSON_FORCE_OBJECT);
+    }
+
+    public function top250($page)
+    {
+        $page_start = $page * 25;
+        $top250Url = 'https://movie.douban.com/top250?start=0' . $page_start;
+        $top250Data = self::http_get($top250Url);
+        preg_match_all('#<em class="">([\s\S]*?)<\/em>([\s\S]*?)<a href="https:\/\/movie.douban.com\/subject\/([\s\S]*?)\/">([\s\S]*?)<img width="100" alt="([\s\S]*?)" src="([\s\S]*?)" class="">#', $top250Data, $preg);
+        preg_match_all('#<span class="rating_num" property="v:average">([\s\S]*?)<\/span>#', $top250Data, $Rank);
+        $count = count($preg[0]);
+        for ($i = 0; $i < $count; $i++) {
+            $returnData[$i]['Em'] = $preg[1][$i];
+            $returnData[$i]['Id'] = $preg[3][$i];
+            $returnData[$i]['Name'] = $preg[5][$i];
+            $returnData[$i]['Rank'] = $Rank[1][$i];
+            $returnData[$i]['Img'] = $preg[6][$i];
+        }
+        return $this->top250Data = json_encode($returnData, JSON_UNESCAPED_UNICODE | JSON_FORCE_OBJECT);
     }
 
 
