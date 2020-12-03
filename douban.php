@@ -326,7 +326,6 @@ class douban
         }
         curl_setopt($oCurl, CURLOPT_URL, $url);
         curl_setopt($oCurl, CURLOPT_USERAGENT,'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.193 Safari/537.36');
-        curl_setopt($oCurl, CURLOPT_COOKIE , 'bid=7wakQvoQeZQ; __gads=ID=f29370a05200ff0a-22983bbfb1c40009:T=1605238749:RT=1605238749:S=ALNI_MYOc_hr1sQyPE2Tq9M66eSPg1hPfA; ll="118318"; _vwo_uuid_v2=DA58988FC47A1FF0210616ACF02E9B86D|f4f99126f3adefe84eda43b37977dfef; douban-fav-remind=1; __yadk_uid=njncNwN1EHEmcRBBNolwkSBzSxE031xD; __utmc=30149280; _pk_ref.100001.8cb4=%5B%22%22%2C%22%22%2C1605853883%2C%22https%3A%2F%2Fmovie.douban.com%2Fsubject%2F30337662%2F%3Ftag%3D%25E7%2583%25AD%25E9%2597%25A8%26from%3Dgaia_video%22%5D; _pk_ses.100001.8cb4=*; ap_v=0,6.0; __utma=30149280.1385831491.1605077598.1605851353.1605853884.9; __utmz=30149280.1605853884.9.3.utmcsr=douban.com|utmccn=(referral)|utmcmd=referral|utmcct=/; __utmt=1; push_noty_num=0; push_doumail_num=0; dbcl2="223604292:OI0tJY6zXfo"; ck=DLrt; __utmv=30149280.22360; __utmb=30149280.4.10.1605853884; _pk_id.100001.8cb4=b774cd484a140836.1605264921.7.1605856672.1605851921.' );
         curl_setopt($oCurl, CURLOPT_RETURNTRANSFER, 1);
         $sContent = curl_exec($oCurl);
         $aStatus = curl_getinfo($oCurl);
