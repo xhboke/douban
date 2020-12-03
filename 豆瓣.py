@@ -1,3 +1,9 @@
+'''
+@desc 爬取豆瓣影片 ID
+@author <xhboke>
+@since <1.0.0>
+@GitHub https://github.com/xhboke/douban
+'''
 import requests
 import pymssql
 import json
