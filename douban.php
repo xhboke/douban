@@ -1,7 +1,7 @@
 <?php
 /**
  * @author <xhboke>
- * @since <4.0.0>
+ * @since <5.0.0>
  * @GitHub https://github.com/xhboke/douban
  */
 
@@ -15,6 +15,7 @@ class douban
     var $top250Data;
     var $GetMovieArr;
     var $GetTvArr;
+    
     /*
     status:0为正常
     Count:搜索结果数
@@ -58,7 +59,7 @@ class douban
 
     public function IdInfoArr($UrlData)
     {
-        preg_match_all('#"name": "([\s\S]*?)",#', $UrlData, $PlayName);
+        preg_match_all('#<meta name="keywords" content="([\s\S]*?),#', $UrlData, $PlayName);
         preg_match_all('#<span property="v:genre">([\s\S]*?)<\/span>#', $UrlData, $PlayGenre);
         preg_match_all('#"datePublished": "([\s\S]*?)",#', $UrlData, $PlayDatapublish);
         preg_match_all('#property="v:average">([\s\S]*?)<\/strong>#', $UrlData, $PlayRating);
@@ -219,6 +220,7 @@ class douban
         $celebrityUrl = 'https://movie.douban.com/celebrity/' . $id . '/';
         $celebrity_Data = self::http_get($celebrityUrl);
         preg_match_all('#<h1>([\s\S]*?)<\/h1>#', $celebrity_Data, $Name);
+        preg_match_all('#<a class="nbg" title="([\s\S]*?)" href="([\s\S]*?)">#', $celebrity_Data, $celebrity_Img);
         preg_match_all('#<span>性别<\/span>:([\s\S]*?)<\/li>#', $celebrity_Data, $Sex);
         preg_match_all('#<span>星座<\/span>:([\s\S]*?)<\/li>#', $celebrity_Data, $Constellation);
         preg_match_all('#<span>出生日期<\/span>:([\s\S]*?)<\/li>#', $celebrity_Data, $BirthDay);
@@ -226,13 +228,14 @@ class douban
         preg_match_all('#<span>职业<\/span>:([\s\S]*?)<\/li>#', $celebrity_Data, $Profession);
         preg_match_all('#<span>更多外文名<\/span>:([\s\S]*?)<\/li>#', $celebrity_Data, $OtherName);
         preg_match_all('#<span>家庭成员<\/span>:([\s\S]*?)<\/li>#', $celebrity_Data, $FamilyMember);
+
         $Family_Member = preg_replace("/<a[^>]*>(.*?)<\/a>/is", "$1", $FamilyMember[1][0]);
 
-        
         preg_match_all('#<span>官方网站<\/span>:([\s\S]*?)target="_blank">([\s\S]*?)<\/a>([\s\S]*?)<\/li>#', $celebrity_Data, $Website);
 
         $ReturnData['Id'] = $id;
         $ReturnData['Name'] = $Name[1][0];
+        $ReturnData['Img'] = $celebrity_Img[2][0];
         $ReturnData['Sex'] = trim($Sex[1][0]);
         $ReturnData['Constellation'] = trim($Constellation[1][0]);
         $ReturnData['BirthDay'] = trim($BirthDay[1][0]);
@@ -269,7 +272,6 @@ class douban
         return $this->top250Data = json_encode($returnData, JSON_UNESCAPED_UNICODE | JSON_FORCE_OBJECT);
     }
 
-
     /*
         https://www.douban.com/link2/?url=
         http://www.douban.com/link2/?url=
@@ -287,12 +289,7 @@ class douban
             }
         }
         return $DoubanUrl;
-
-        //$return =  str_replace('https://www.douban.com/link2/?url=', "", $DoubanUrl);
-        //$return =  str_replace('http://www.douban.com/link2/?url=', "", $return);
-        //return $return;
     }
-
 
 
     public function Movie($MovieType = '豆瓣高分', $MovieSort = 'recommend', $page_limit = '24', $page = 1)
@@ -313,8 +310,6 @@ class douban
         $TvArr = json_decode($TvData, true);
         return $this->GetTvArr = $TvArr;
     }
-
-
 
     public function http_get($url)
     {
@@ -337,8 +332,6 @@ class douban
         }
     }
 
-
-
     public function GetSubstr($str, $leftStr, $rightStr)
     {
         $left = strpos($str, $leftStr);
@@ -347,4 +340,5 @@ class douban
         return substr($str, $left + strlen($leftStr), $right - $left - strlen($leftStr));
     }
 }
+
 
