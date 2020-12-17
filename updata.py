@@ -3,6 +3,9 @@ import numpy as np
 import requests
 import json
 
+'''
+基本信息
+'''
 host = '127.0.0.1'  # 数据库地址
 user = ''  # 数据库用户名
 password = ''  # 数据库用户名密码
