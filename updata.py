@@ -3,19 +3,32 @@ import numpy as np
 import requests
 import json
 
-conn = pymssql.connect(host='127.0.0.1', user='',
-                       password='', database='DouBan', charset="utf8")
+host = '127.0.0.1'  # 数据库地址
+user = ''  # 数据库用户名
+password = ''  # 数据库用户名密码
+database = 'Douban'  # 数据库的模式
+sql = "SELECT ID FROM MOVIES WHERE title IS NULL"  # 所查询更新的电影 ID 语句
+
+conn = pymssql.connect(host=host, user=user,
+                       password=password, database=database, charset="utf8")
 cur = conn.cursor()
-sql = "SELECT ID FROM MOVIES WHERE title IS NULL"
 cur.execute(sql)
 arr = np.array(cur.fetchall())
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36 QIHU 360SE'}
+
+
+'''
+清除 SQL 中包含的单引号所引起的插入失败
+'''
 
 
 def clearStr(a):
     a = a.replace("'", "''")
     return a
+
+
+'''
+清除 SQL 中包含的 None 所引起的插入失败
+'''
 
 
 def clearNone(a):
@@ -24,10 +37,13 @@ def clearNone(a):
     return a
 
 
+'''
+循环遍历 SQL 搜索结果的电影 ID 
+'''
 for i in arr:
-    url = 'http://localhost/movie/info.php?id=' + str(int(i))
+    url = 'http://localhost/movie/info.php?id=' + str(int(i))  # 请求网址
     while(True):
-        res = requests.get(url, headers=headers)
+        res = requests.get(url)
         jsonStr = json.loads(res.text)
         if(jsonStr['info']['Name']):
             break
@@ -64,6 +80,7 @@ for i in arr:
             Director = np.append(Director, PlayDirector[i]['Name'])
     Director = ','.join(Director)
 
+    # 更新 SQL 语句
     sql = "UPDATE MOVIES SET title='{Name}',describe='{PlayDesc}',\
 datepublished='{DatePublished}',genre='{Genre}',\
 rating={Rating},votes={PlayVotes},\
@@ -75,10 +92,9 @@ WHERE ID = {ID}".\
                Genre=Genre, Rating=Rating,
                PlayVotes=PlayVotes, PlayImg=PlayImg,
                PlayYear=PlayYear, Actor=Actor, Director=Director)
+    print(Name)
     try:
-        print(Name)
         cur.execute(sql)
         conn.commit()
     except:
-        print(Name)
-        print(sql)
+        print(sql)  # 失败打印 SQL 语句

@@ -1,11 +1,12 @@
 <?php
+
 /**
  * @author <xhboke>
  * @since <5.0.1>
  * @GitHub https://github.com/xhboke/douban
  */
 
- 
+
 class douban
 {
     var $SearchData;
@@ -16,7 +17,7 @@ class douban
     var $top250Data;
     var $GetMovieArr;
     var $GetTvArr;
-    
+
     /*
     status:0为正常
     Count:搜索结果数
@@ -321,7 +322,7 @@ class douban
             curl_setopt($oCurl, CURLOPT_SSLVERSION, 1);
         }
         curl_setopt($oCurl, CURLOPT_URL, $url);
-        curl_setopt($oCurl, CURLOPT_USERAGENT,'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.193 Safari/537.36');
+        curl_setopt($oCurl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.193 Safari/537.36');
         curl_setopt($oCurl, CURLOPT_RETURNTRANSFER, 1);
         $sContent = curl_exec($oCurl);
         $aStatus = curl_getinfo($oCurl);
@@ -341,5 +342,3 @@ class douban
         return substr($str, $left + strlen($leftStr), $right - $left - strlen($leftStr));
     }
 }
-
-
