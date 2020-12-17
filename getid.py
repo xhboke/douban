@@ -24,7 +24,6 @@ cur = conn.cursor()
 '''
 for _year in year_range:
     for _page in range(0, 499):
-        # 一页20个一共500页，理论一页共1W个
         while(True):
             url = 'http://localhost/movie/tag.php?year_range=' + \
                 _year + '&page=' + str(_page)
@@ -45,5 +44,4 @@ for _year in year_range:
                         print("[" + str(ID) + "]第" + str(_page) +
                               "页 / 第" + str(i) + "个插入SQL失败！正在重试！！！")
                 print("=====================")
-                # time.sleep(1)
                 break
