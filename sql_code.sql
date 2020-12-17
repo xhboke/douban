@@ -10,4 +10,4 @@ CREATE TABLE Movies (
     years varchar(255),
     actor varchar(MAX),
     director varchar(MAX),
-)
+);
