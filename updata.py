@@ -5,7 +5,7 @@ import json
 
 conn = pymssql.connect(host='127.0.0.1', user='', password='', database='DouBan',charset="utf8")
 cur = conn.cursor()
-sql = "SELECT ID FROM MOVIES WHERE title IS NULL order by title"
+sql = "SELECT ID FROM MOVIES WHERE title IS NULL"
 cur.execute(sql)
 arr = np.array(cur.fetchall())
 headers = { 'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36 QIHU 360SE'}
