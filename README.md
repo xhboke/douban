@@ -15,6 +15,10 @@
 
 ## 豆瓣API
 
+通过对 `index.php` 的Get请求获取结果
+
+请求参数可参考：[https://api.xhboke.com/doc/movie/](https://api.xhboke.com/doc/movie/)
+
 * 名人信息
 * 影片短评
 * 影片信息
