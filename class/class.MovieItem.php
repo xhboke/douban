@@ -298,24 +298,27 @@ class MovieInfo extends Movie
     {
         $_wd = urlencode($_wd);
         $_config = array(
-            'url' => 'https://api.iokzy.com/index.php?m=vod-search',
+            'url' => 'https://98hyk.cn/index.php/vod/search.html',
             'method' => 'post',
-            'data' => 'wd=' . $_wd . '&submit=search',
-            'baseUrl' => 'https://api.iokzy.com/?m=vod-detail-id-[].html'
+            'data' => 'wd=' . $_wd . '&submit=',
+            'baseUrl' => 'https://98hyk.cn/index.php/vod/detail/id/[].html'
         );
         // 搜索结果数据
         $_data = $this->curl_post($_config['url'], $_config['data']);
-        preg_match_all('#<span class="">&nbsp;([\s\S]*?)&nbsp;#', $_data, $_count);
+        // print_r($_data);
+        // preg_match_all('#<a href="\/index.php\/vod\/detail\/id\/([\s\S]*?).html#', $_data, $_count);
         // 搜索结果数目
-        $_count =  $_count[1][0];
-        preg_match_all('#><a href="\/\?m=vod-detail-id-([\s\S]*?).html#', $_data, $_id);
+        // $_count =  $_count[1][0];
+        preg_match_all('#<a href="\/index.php\/vod\/detail\/id\/([\s\S]*?).html#', $_data, $_id);
         // 多个结果，默认选择第一个匹配
+        
         $_id =  $_id[1][0];
         $_url =  str_replace("[]", $_id, $_config['baseUrl']);
         $_data = $this->curl_get($_url);
-        preg_match_all('#value="([\s\S]*?)" checked="" \/>([\s\S]*?)\$([\s\S]*?)<\/li>#', $this->getSubstr($_data, '<div id="2">', '</ul>'), $_play);
-        $_url = $_play[1];
-        $_origin = $_play[2];
+        preg_match_all('#-- 播放集数 -->([\s\S]*?)<([\s\S]*?)播放集数地址 -->([\s\S]*?)<#', $_data, $_play);
+        
+        $_url = $_play[3];
+        $_origin = $_play[1];
         $m = count($_url);
         for ($i = 0; $i < $m; $i++) {
             $_return[$i]['from'] = $_origin[$i];
