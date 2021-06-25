@@ -17,6 +17,8 @@ class MovieInfo extends Movie
     public $Votes;
     public $Image;
     public $Year;
+    public $IMDB;
+    public $Episode;
     public $Actor;
     public $Single_episode_length;
     public $EpisodeUrl;
@@ -41,13 +43,15 @@ class MovieInfo extends Movie
         $this->All['Year'] = $this->getYear();
         $this->All['DatePublished'] = $this->getDatePublished();
         $this->All['Genre'] = $this->getGenre();
-        $this->All['Language'] = trim($this->get_Language());
+        $this->All['Language'] = $this->get_Language();
         $this->All['Other_name'] = $this->get_Other_name();
         $this->All['Rating'] = $this->getRating();
         $this->All['Votes'] = $this->getVotes();
         $this->All['Description'] = $this->getDescription();
-        $this->All['Single_episode_length'] = trim($this->get_Single_episode_length());
+        $this->All['Episode'] = $this->getEpisode();
+        $this->All['Single_episode_length'] = $this->get_Single_episode_length();
         $this->All['Movie_length'] = $this->get_Movie_length();
+        $this->All['IMDB'] = $this->getIMDB();
         $this->All['Actors'] = $this->getActor();
         if ($is_play_url == True) {
             $this->All['EpisodeUrl'] = $this->getEpisodeUrl();
@@ -114,7 +118,7 @@ class MovieInfo extends Movie
 
     public function get_Language()
     {
-        $_ =  $this->preg('#语言:<\/span>([\s\S]*?)<br\/>#', $this->data, 1)[0];
+        $_ =  trim($this->preg('#语言:<\/span>([\s\S]*?)<br\/>#', $this->data, 1)[0]);
         $this->Language = $_ == null ? '' : $_;
         return $this->Language;
     }
@@ -157,6 +161,11 @@ class MovieInfo extends Movie
         }
         return $this->Year;
     }
+    public function getIMDB()
+    {
+        $this->IMDB = trim($this->preg('#IMDb:<\/span>([\s\S]*?)<br>#', $this->data, 1)[0]);
+        return $this->IMDB;
+    }
     public function getActor()
     {
         $_ActorInfo = $this->preg('#<div class="avatar" style="background-image: url\(([\s\S]*?)\)">([\s\S]*?)<span class="name"><a href="https:\/\/movie.douban.com\/celebrity\/([\s\S]*?)/" title="([\s\S]*?)" class="name">([\s\S]*?)<\/a>([\s\S]*?)<span class="role" title="([\s\S]*?)">#', $this->data, 0);
@@ -170,9 +179,15 @@ class MovieInfo extends Movie
         return $this->Actor;
     }
 
+    public function getEpisode()
+    {
+        $this->Episode = trim($this->preg('#集数:<\/span>([\s\S]*?)<br\/>#', $this->data, 1)[0]);
+        return $this->Episode;
+    }
+
     public function get_Single_episode_length()
     {
-        $this->Single_episode_length = $this->preg('#单集片长:<\/span>([\s\S]*?)<br\/>#', $this->data, 1)[0];
+        $this->Single_episode_length = trim($this->preg('#单集片长:<\/span>([\s\S]*?)<br\/>#', $this->data, 1)[0]);
         return $this->Single_episode_length;
     }
 
@@ -311,12 +326,12 @@ class MovieInfo extends Movie
         // $_count =  $_count[1][0];
         preg_match_all('#<a href="\/index.php\/vod\/detail\/id\/([\s\S]*?).html#', $_data, $_id);
         // 多个结果，默认选择第一个匹配
-        
+
         $_id =  $_id[1][0];
         $_url =  str_replace("[]", $_id, $_config['baseUrl']);
         $_data = $this->curl_get($_url);
         preg_match_all('#-- 播放集数 -->([\s\S]*?)<([\s\S]*?)播放集数地址 -->([\s\S]*?)<#', $_data, $_play);
-        
+
         $_url = $_play[3];
         $_origin = $_play[1];
         $m = count($_url);
