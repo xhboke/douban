@@ -97,7 +97,7 @@ class MovieInfo extends Movie
     }
     public function getChineseName()
     {
-        $this->ChineseName = $this->preg('#<i class="">([\s\S]*?)的#', $this->data, 1)[0];
+        $this->ChineseName = $this->preg('#<i class="">([\s\S]*?)的剧情简介#', $this->data, 1)[0];
         return $this->ChineseName;
     }
     public function getDescription()
