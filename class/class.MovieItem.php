@@ -97,7 +97,7 @@ class MovieInfo extends Movie
     }
     public function getChineseName()
     {
-        $this->ChineseName = trim(str_replace(array("\n", "\r","(豆瓣)"), "", $this->preg('#<title>([\s\S]*?)<\/title>#', $this->data, 1)[0]));
+        $this->ChineseName = trim(str_replace(array("\n", "\r", "(豆瓣)"), "", $this->preg('#<title>([\s\S]*?)<\/title>#', $this->data, 1)[0]));
         return $this->ChineseName;
     }
     public function getDescription()
@@ -111,8 +111,8 @@ class MovieInfo extends Movie
     }
     public function getDatePublished()
     {
-        $_ = $this->preg('#<span property="v:initialReleaseDate" content="([\s\S]*?)">#', $this->data, 1)[0];
-        $this->DatePublished = $_ == null ? '' : $_;
+        $_ = $this->preg('#<span property="v:initialReleaseDate" content="([\s\S]*?)">#', $this->data, 1);
+        $this->DatePublished = $_ == null ? '' : implode('/', $_);
         return $this->DatePublished;
     }
 
