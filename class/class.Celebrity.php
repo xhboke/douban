@@ -52,7 +52,7 @@ class Celebrity extends Movie
     }
     public function getImage()
     {
-        $this->Image = trim($this->preg('#<a class="nbg" title="([\s\S]*?)" href="([\s\S]*?)">#', $this->data, 2)[0]);
+        $this->Image = trim($this->preg('#<img class="media" src="([\s\S]*?)" \/>#', $this->data, 1)[0]);
         return $this->Image;
     }
     public function getSex()

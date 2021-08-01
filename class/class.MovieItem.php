@@ -56,10 +56,10 @@ class MovieInfo extends Movie
         if ($is_play_url == True) {
             $this->All['EpisodeUrl'] = $this->getEpisodeUrl();
         }
-        if ($this->All['EpisodeUrl']['status'] == 1 && $isAccurate == true) {
+        if ($this->All['EpisodeUrl']['status'] == 404 && $isAccurate == true) {
             $_ = $this->get_Out_Play_Url($this->All['ChineseName']);
             $this->All['EpisodeUrl']['data'] = $_;
-            $this->All['EpisodeUrl']['status'] = 0;
+            $this->All['EpisodeUrl']['status'] = 404;
             $this->All['EpisodeUrl']['type'] = 'movie';
         }
         $this->All['OtherLike'] = $this->getOtherLike();
@@ -97,7 +97,7 @@ class MovieInfo extends Movie
     }
     public function getChineseName()
     {
-        $this->ChineseName = trim(str_replace(array("\n", "\r", "(豆瓣)"), "", $this->preg('#<title>([\s\S]*?)<\/title>#', $this->data, 1)[0]));
+        $this->ChineseName = $this->preg('#<i class="">([\s\S]*?)的#', $this->data, 1)[0];
         return $this->ChineseName;
     }
     public function getDescription()
@@ -111,8 +111,8 @@ class MovieInfo extends Movie
     }
     public function getDatePublished()
     {
-        $_ = $this->preg('#<span property="v:initialReleaseDate" content="([\s\S]*?)">#', $this->data, 1);
-        $this->DatePublished = $_ == null ? '' : implode('/', $_);
+        $_ = $this->preg('#<span property="v:initialReleaseDate" content="([\s\S]*?)">#', $this->data, 1)[0];
+        $this->DatePublished = $_ == null ? '' : $_;
         return $this->DatePublished;
     }
 
@@ -215,10 +215,10 @@ class MovieInfo extends Movie
             } elseif (strpos($this->data, '"@type": "TVSeries"') !== false) {
                 $this->EpisodeUrl = array('status' => 0, 'type' => 'tv', 'data' => $this->getTVSeriesEpisodeUrl($this->data));
             } else {
-                $this->EpisodeUrl = array('status' => 2);
+                $this->EpisodeUrl = array('status' => 403);
             }
         } else {
-            $this->EpisodeUrl = array('status' => 1);
+            $this->EpisodeUrl = array('status' => 404);
         }
         return $this->EpisodeUrl;
     }
@@ -313,27 +313,29 @@ class MovieInfo extends Movie
     {
         $_wd = urlencode($_wd);
         $_config = array(
-            'url' => 'https://98hyk.cn/index.php/vod/search.html',
-            'method' => 'post',
-            'data' => 'wd=' . $_wd . '&submit=',
-            'baseUrl' => 'https://98hyk.cn/index.php/vod/detail/id/[].html'
+            'url' => 'http://tiankongzy.cc/index.php/vod/search.html?wd=',
+            'method' => 'get',
+            'baseUrl' => 'http://tiankongzy.cc/index.php/vod/detail/id/[].html'
         );
         // 搜索结果数据
-        $_data = $this->curl_post($_config['url'], $_config['data']);
+        // $_data = $this->curl_post($_config['url'], $_config['data']);
+        $_data = $this->curl_get($_config['url'].$_wd);
         // print_r($_data);
         // preg_match_all('#<a href="\/index.php\/vod\/detail\/id\/([\s\S]*?).html#', $_data, $_count);
         // 搜索结果数目
         // $_count =  $_count[1][0];
-        preg_match_all('#<a href="\/index.php\/vod\/detail\/id\/([\s\S]*?).html#', $_data, $_id);
+        preg_match_all('#<a href="\/index.php\/vod/detail\/id\/([\s\S]*?).html#', $_data, $_id);
         // 多个结果，默认选择第一个匹配
 
         $_id =  $_id[1][0];
         $_url =  str_replace("[]", $_id, $_config['baseUrl']);
         $_data = $this->curl_get($_url);
-        preg_match_all('#-- 播放集数 -->([\s\S]*?)<([\s\S]*?)播放集数地址 -->([\s\S]*?)<#', $_data, $_play);
+        
+        
+        preg_match_all('#<li><input type="checkbox" name="copy_sel" value="([\s\S]*?)" checked\/>([\s\S]*?)\$#', $_data, $_play);
 
-        $_url = $_play[3];
-        $_origin = $_play[1];
+        $_url = $_play[1];
+        $_origin = $_play[2];
         $m = count($_url);
         for ($i = 0; $i < $m; $i++) {
             $_return[$i]['from'] = $_origin[$i];

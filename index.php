@@ -129,54 +129,7 @@ if ($_type == 'year') {
         }
     }
 } elseif ($_type == 'carousel') {
-    $jsonstr = '
-{
-    "xs":[
-        {
-            "id":"30228394",
-            "img":"//liangcang-material.alicdn.com/prod/upload/a9840124460f47d2893b4db914aa60a6.jpg?x-oss-process=image/resize,w_1125/format,webp/interlace,1",
-            "name":"【觉醒年代】"
-        },
-        {
-            "id":"27073752",
-            "img":"//liangcang-material.alicdn.com/prod/upload/aff6c84d4f9649d0b3bbd45c33a17e41.jpg?x-oss-process=image/resize,w_1125/format,webp/interlace,1",
-            "name":"【神奇女侠1984】"
-        },
-        {
-            "id":"27592484",
-            "img":"//liangcang-material.alicdn.com/prod/upload/fe453a9184904dcdac569898cd9046d9.jpg?x-oss-process=image/resize,w_1125/format,webp/interlace,1",
-            "name":"【热气球飞行家】"
-        },
-        {
-            "id":"1652587",
-            "img":"//puui.qpic.cn/tv/0/1229644004_1080607/0?max_age=7776000",
-            "name":"【阿凡达】"
-        }
-    ],
-    "md":[
-        {
-            "id":"30228394",
-            "img":"//liangcang-material.alicdn.com/prod/upload/95b27ac0cfb94784bb6eba930d7c183e.jpg?x-oss-process=image/resize,w_2074/interlace,1/quality,Q_80/sharpen,100",
-            "name":"【觉醒年代】"
-        },
-        {
-            "id":"35390421",
-            "img":"//liangcang-material.alicdn.com/prod/upload/d767cc0e46134eeb9f230b2751b0c52e.jpg?x-oss-process=image/resize,w_2074/interlace,1/quality,Q_80/sharpen,100",
-            "name":"【巨鲨之夺命鲨滩】"
-        },
-        {
-            "id":"27605542",
-            "img":"//liangcang-material.alicdn.com/prod/upload/3af5e9bbcf5c4eeb95a4bcf4f139dc6b.jpg?x-oss-process=image/resize,w_2074/interlace,1/quality,Q_80/sharpen,100",
-            "name":"【司藤】"
-        },
-        {
-            "id":"35172526",
-            "img":"//liangcang-material.alicdn.com/prod/upload/753576b361b545c7b01f19bb726063f9.jpg?x-oss-process=image/resize,w_2074/interlace,1/quality,Q_80/sharpen,100",
-            "name":"【同一屋檐下】"
-        }
-    ],
-    "ad":"目前无限期测试，考虑上线只有后端IP限制成功后。"
-}';
+    $jsonstr = file_get_contents('./.cache/carousel.json');
     echo $jsonstr;
 } else {
     $url = isset($_GET['url']) ? $_GET['url'] : '';
