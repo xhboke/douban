@@ -20,6 +20,9 @@ class MovieInfo extends Movie
     public $IMDB;
     public $Episode;
     public $Actor;
+    public $All_directors;
+    public $All_writers;
+    public $All_actors;
     public $Single_episode_length;
     public $EpisodeUrl;
     public $All;
@@ -52,6 +55,9 @@ class MovieInfo extends Movie
         $this->All['Single_episode_length'] = $this->get_Single_episode_length();
         $this->All['Movie_length'] = $this->get_Movie_length();
         $this->All['IMDB'] = $this->getIMDB();
+        $this->All['All_directors'] = $this->get_All_directors();
+        $this->All['All_writers'] = $this->get_All_writers();
+        $this->All['All_actors'] = $this->get_All_actors();
         $this->All['Actors'] = $this->getActor();
         if ($is_play_url == True) {
             $this->All['EpisodeUrl'] = $this->getEpisodeUrl();
@@ -199,6 +205,39 @@ class MovieInfo extends Movie
         return $this->Movie_length;
     }
 
+    /**
+     * 获取所有的导演
+     */
+    public function get_All_directors()
+    {
+        $_ = $this->preg('#<span ><span class=\'pl\'>导演</span>: ([\s\S]*?)<br\/>#', $this->data, 1)[0];
+        $_ = $_ == null ? '' : $_;
+        $this->All_directors = str_replace(" ", '', strip_tags($_));
+        return $this->All_directors;
+    }
+
+    /**
+     * 获取所有的导演
+     */
+    public function get_All_writers()
+    {
+        $_ = $this->preg('#<span ><span class=\'pl\'>编剧</span>: ([\s\S]*?)<br\/>#', $this->data, 1)[0];
+        $_ = $_ == null ? '' : $_;
+        $this->All_writers = str_replace(" ", '', strip_tags($_));
+        return $this->All_writers;
+    }
+
+    /**
+     * 获取所有的演员
+     */
+    public function get_All_actors()
+    {
+        $_ = $this->preg('#<span class="actor"><span class=\'pl\'>主演</span>: ([\s\S]*?)<br\/>#', $this->data, 1)[0];
+        $_ = $_ == null ? '' : $_;
+        $this->All_actors = str_replace(" ", '', strip_tags($_));
+        return $this->All_actors;
+    }
+
     public function getEpisodeUrl()
     {
         // 有播放链接的标识
@@ -319,7 +358,7 @@ class MovieInfo extends Movie
         );
         // 搜索结果数据
         // $_data = $this->curl_post($_config['url'], $_config['data']);
-        $_data = $this->curl_get($_config['url'].$_wd);
+        $_data = $this->curl_get($_config['url'] . $_wd);
         // print_r($_data);
         // preg_match_all('#<a href="\/index.php\/vod\/detail\/id\/([\s\S]*?).html#', $_data, $_count);
         // 搜索结果数目
@@ -330,8 +369,8 @@ class MovieInfo extends Movie
         $_id =  $_id[1][0];
         $_url =  str_replace("[]", $_id, $_config['baseUrl']);
         $_data = $this->curl_get($_url);
-        
-        
+
+
         preg_match_all('#<li><input type="checkbox" name="copy_sel" value="([\s\S]*?)" checked\/>([\s\S]*?)\$#', $_data, $_play);
 
         $_url = $_play[1];
