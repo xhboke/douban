@@ -20,6 +20,7 @@ class MovieInfo extends Movie
     public $IMDB;
     public $Episode;
     public $Actor;
+    public $region;
     public $All_directors;
     public $All_writers;
     public $All_actors;
@@ -47,6 +48,7 @@ class MovieInfo extends Movie
         $this->All['DatePublished'] = $this->getDatePublished();
         $this->All['Genre'] = $this->getGenre();
         $this->All['Language'] = $this->get_Language();
+        $this->All['Region'] = $this->get_region();
         $this->All['Other_name'] = $this->get_Other_name();
         $this->All['Rating'] = $this->getRating();
         $this->All['Votes'] = $this->getVotes();
@@ -236,6 +238,17 @@ class MovieInfo extends Movie
         $_ = $_ == null ? '' : $_;
         $this->All_actors = str_replace(" ", '', strip_tags($_));
         return $this->All_actors;
+    }
+
+    /**
+     * 获取制片国家/地区
+     */
+    public function get_region()
+    {
+        $_ = $this->preg('#<span class="pl">制片国家/地区:<\/span> ([\s\S]*?)<br\/>#', $this->data, 1)[0];
+        $_ = $_ == null ? '' : $_;
+        $this->region = str_replace(" ", '', strip_tags($_));
+        return $this->region;
     }
 
     public function getEpisodeUrl()
