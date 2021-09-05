@@ -312,13 +312,21 @@ class MovieInfo extends Movie
             $JsUrl = 'https://img3.doubanio.com/misc/mixed_static/' . end($JsId[1]) . '.js';
             $JsData = $this->curl_get($JsUrl);
             preg_match_all('#sources\[(.*?)\] = \[([\s\S]*?)\];#', $JsData, $PlayUrlList);
-
-            preg_match_all('#{play_link: "([\s\S]*?)", ep: "#', $PlayUrlList[2][0], $ls);
+            print_r($PlayUrlList);
+            
             $i = 0;
-            foreach ($ls[1] as $a) {
-                $PlayUrl[$i] = $a;
-                $i++;
+            foreach ($PlayUrlList[2] as $list) {
+
+                preg_match_all('#{play_link: "([\s\S]*?)", ep: "#', $PlayUrlList[2][0], $ls);
+                $j = 0;
+                foreach ($ls[1] as $a) {
+                    $PlayUrl[$i][$j] = $a;
+                    $j++;
+                }
+                $i++; 
+
             }
+
             return $this->doubanUrlToUrl($PlayUrl);
         }
     }
