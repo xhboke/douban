@@ -53,9 +53,9 @@ if ($_type == 'year') {
     $_page = isset($_GET["page"]) ? $_GET["page"] : 0;
     $_status = isset($_GET["status"]) ? $_GET["status"] : 'P';
     $_sort = isset($_GET["sort"]) ? $_GET["sort"] : 'new_score';
-    $_type = isset($_GET["type"]) ? $_GET["type"] : '';
+    $__type = isset($_GET["_type"]) ? $_GET["_type"] : '';
 
-    $obj = new MovieComment($_id, $_page, $_status, $_sort, $_type);
+    $obj = new MovieComment($_id, $_page, $_status, $_sort, $__type);
     if ($obj->isId()) {
         echo $obj->getComments();
     } else {
