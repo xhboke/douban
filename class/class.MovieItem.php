@@ -316,7 +316,7 @@ class MovieInfo extends Movie
             $i = 0;
             foreach ($PlayUrlList[2] as $list) {
 
-                preg_match_all('#{play_link: "([\s\S]*?)", ep: "#', $PlayUrlList[2][0], $ls);
+                preg_match_all('#{play_link: "([\s\S]*?)", ep: "#', $PlayUrlList[2][$i], $ls);
                 $j = 0;
                 foreach ($ls[1] as $a) {
                     $PlayUrl[$i][$j] = $a;
