@@ -312,8 +312,7 @@ class MovieInfo extends Movie
             $JsUrl = 'https://img3.doubanio.com/misc/mixed_static/' . end($JsId[1]) . '.js';
             $JsData = $this->curl_get($JsUrl);
             preg_match_all('#sources\[(.*?)\] = \[([\s\S]*?)\];#', $JsData, $PlayUrlList);
-            print_r($PlayUrlList);
-            
+
             $i = 0;
             foreach ($PlayUrlList[2] as $list) {
 
