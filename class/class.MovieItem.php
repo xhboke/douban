@@ -105,7 +105,7 @@ class MovieInfo extends Movie
     }
     public function getChineseName()
     {
-        $this->ChineseName = trim(str_replace(array("\n", "\r","(豆瓣)"), "", $this->preg('#<title>([\s\S]*?)<\/title>#', $this->data, 1)[0]));
+        $this->ChineseName = trim(str_replace(array("\n", "\r", "(豆瓣)"), "", $this->preg('#<title>([\s\S]*?)<\/title>#', $this->data, 1)[0]));
         return $this->ChineseName;
     }
     public function getDescription()
@@ -133,7 +133,7 @@ class MovieInfo extends Movie
 
     public function get_Other_name()
     {
-        $this->Other_name = $this->preg('#又名:<\/span>([\s\S]*?)<br\/>#', $this->data, 1)[0];
+        $this->Other_name = str_replace(" ", '', strip_tags($this->preg('#又名:<\/span>([\s\S]*?)<br\/>#', $this->data, 1)[0]));
         return $this->Other_name;
     }
 
@@ -312,10 +312,11 @@ class MovieInfo extends Movie
             $JsUrl = 'https://img3.doubanio.com/misc/mixed_static/' . end($JsId[1]) . '.js';
             $JsData = $this->curl_get($JsUrl);
             preg_match_all('#sources\[(.*?)\] = \[([\s\S]*?)\];#', $JsData, $PlayUrlList);
+
+            preg_match_all('#{play_link: "([\s\S]*?)", ep: "#', $PlayUrlList[2][0], $ls);
             $i = 0;
-            foreach ($PlayUrlList[2] as $a) {
-                preg_match_all('#{play_link: "(.*)", ep: "#', $a, $ls);
-                $PlayUrl[$i] = $ls[1];
+            foreach ($ls[1] as $a) {
+                $PlayUrl[$i] = $a;
                 $i++;
             }
             return $this->doubanUrlToUrl($PlayUrl);
