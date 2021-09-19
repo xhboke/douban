@@ -6,6 +6,13 @@ class DouBan
     public const Cookie = '';
     public const BusyTip = '检测到有异常请求从你的 IP 发出';
 
+    /**  
+     * 获取网页源码
+     * 
+     * @access public 
+     * @param string $url 目标链接
+     * @return string
+     */
     public static function curl_get($url)
     {
         $oCurl = curl_init();
@@ -28,6 +35,14 @@ class DouBan
         }
     }
 
+    /**  
+     * POST方法
+     * 
+     * @access public 
+     * @param string $url 目标链接
+     * @param array $data 数据
+     * @return string
+     */
     public static function curl_post($url, $data)
     {
         $curl = curl_init();
