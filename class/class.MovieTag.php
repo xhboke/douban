@@ -26,6 +26,7 @@ class MovieTag extends Movie
     }
     public function getTag()
     {
+        $this->MovieTagData = array();
         $this->Count = count($this->data->data);
         if ($this->Count) {
             $this->MovieTagData['count'] = $this->Count;
@@ -46,7 +47,6 @@ class MovieTag extends Movie
     /**
      * Top250
      * @param int $page 页数
-     * @return Json
      */
     static public function getTop250($page)
     {
@@ -88,7 +88,6 @@ class MovieTag extends Movie
 
     /**
      * NowPlaying 正在上映
-     * @return Json
      */
     static public function NowPlaying()
     {

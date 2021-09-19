@@ -24,7 +24,7 @@ class DouBan
         if (intval($aStatus["http_code"]) == 200) {
             return $sContent;
         } else {
-            return false;
+            return "";
         }
     }
 
