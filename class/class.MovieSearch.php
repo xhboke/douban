@@ -39,6 +39,21 @@ class MovieSearch extends Movie
         }
         return $this->Json($this->SearchData);
     }
+
+    public static function getSearchSuggest($name)
+    {
+        $_url = 'https://movie.douban.com/j/subject_suggest?q=' . $name;
+        $_data = parent::curl_get($_url);
+        $_json = json_decode($_data, true);
+
+        $_count = count($_json);
+        $_return = [];
+        for ($i = 0; $i < $_count; $i++) {
+            $_return[$i] = $_json[$i]['title'];
+        }
+        return parent::Json($_return);
+    }
+
     private function isEmpty()
     {
         if ($this->Count == 0) {
