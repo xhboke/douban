@@ -52,10 +52,10 @@ class DouBan
      * 取中间文本
      * 
      * @access public 
-     * @param mixed $str 匹配文本
-     * @param mixed $leftStr 匹配左文本
-     * @param mixed $rightStr 匹配右文本
-     * @return mixed
+     * @param string $str 匹配文本
+     * @param string $leftStr 匹配左文本
+     * @param string $rightStr 匹配右文本
+     * @return string
      */
     public static function getSubstr($str, $leftStr, $rightStr)
     {
@@ -86,7 +86,7 @@ class DouBan
      * 
      * @access public 
      * @param array $params 数组
-     * @return array
+     * @return array|string
      */
     public function trimArray($params)
     {
@@ -99,7 +99,6 @@ class DouBan
      * 数据转为Json格式
      * @access public
      * @param array $array 数组
-     * @return Json
      */
     static public function Json($array)
     {
