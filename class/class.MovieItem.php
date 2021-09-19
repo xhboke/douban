@@ -322,8 +322,7 @@ class MovieInfo extends Movie
                     $PlayUrl[$i][$j] = $a;
                     $j++;
                 }
-                $i++; 
-
+                $i++;
             }
 
             return $this->doubanUrlToUrl($PlayUrl);
@@ -365,7 +364,7 @@ class MovieInfo extends Movie
      * 获取外部播放链接
      * 
      * @access private
-     * @param str $wd 搜索影片名称
+     * @param mixed $wd 搜索影片名称
      * @return array
      * 
      */

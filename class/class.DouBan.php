@@ -52,10 +52,10 @@ class DouBan
      * 取中间文本
      * 
      * @access public 
-     * @param str $str 匹配文本
-     * @param str $leftStr 匹配左文本
-     * @param str $rightStr 匹配右文本
-     * @return str
+     * @param mixed $str 匹配文本
+     * @param mixed $leftStr 匹配左文本
+     * @param mixed $rightStr 匹配右文本
+     * @return mixed
      */
     public static function getSubstr($str, $leftStr, $rightStr)
     {

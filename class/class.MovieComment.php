@@ -12,11 +12,11 @@ class MovieComment extends Movie
 
     /**  
      * @access public 
-     * @param str $id 豆瓣电影ID
+     * @param string $id 豆瓣电影ID
      * @param int $page 评论页数
-     * @param str $status 看过:P 在看:N 想看:F
-     * @param str $sort 热门:new_score 最新:time
-     * @param str $type 好评:h 一般:m 差评:l
+     * @param string $status 看过:P 在看:N 想看:F
+     * @param string $sort 热门:new_score 最新:time
+     * @param string $type 好评:h 一般:m 差评:l
      */
     public function __construct($id, $page = 0, $status = 'P', $sort = 'new_score', $type = '')
     {
