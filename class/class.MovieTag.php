@@ -71,7 +71,7 @@ class MovieTag extends Movie
     }
 
     /**
-     * Top250
+     * 获取豆瓣电影250榜单
      * @param int $page 页数
      * @return string
      */
