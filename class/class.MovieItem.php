@@ -7,35 +7,12 @@
  * @author      xhboke 
  * @version     1.0
  */
+
 include_once('class.Movie.php');
 
 class MovieInfo extends Movie
 {
-    public $id;
-    public $url;
-    public $data;
-    public $Name;
-    public $ChineseName;
-    public $Description;
-    public $DatePublished;
-    public $Genre;
-    public $Language;
-    public $Other_name;
-    public $Rating;
-    public $Votes;
-    public $Image;
-    public $Year;
-    public $IMDB;
-    public $Episode;
-    public $Actor;
-    public $region;
-    public $All_directors;
-    public $All_writers;
-    public $All_actors;
-    public $Single_episode_length;
-    public $EpisodeUrl;
-    public $All;
-    public $OtherLike;
+    public $id, $url, $data, $Name, $ChineseName, $Description, $DatePublished, $Genre, $Language, $Other_name, $Rating, $Votes, $Image, $Year, $IMDB, $Episode, $Actor, $region, $All_directors, $All_writers, $All_actors, $Single_episode_length, $EpisodeUrl, $All, $OtherLike;
 
     public function __construct($id)
     {
@@ -170,15 +147,14 @@ class MovieInfo extends Movie
     }
 
     /**  
-     * 获取电影的出版日期（多个只取第一个）
+     * 获取电影的出版日期
      * @access public 
      * @return string
      */
     public function getDatePublished()
     {
-        $_ = $this->preg('#<span property="v:initialReleaseDate" content="([\s\S]*?)">#', $this->data, 1)[0];
-        $_ = $_ == null ? '' : $_;
-        $this->DatePublished = str_replace(" ", '', strip_tags($_));
+        $_ = $this->preg('#<span property="v:initialReleaseDate" content="([\s\S]*?)">#', $this->data, 1);
+        $this->DatePublished = $_ == null ? '' : implode('/', $_);
         return $this->DatePublished;
     }
 
