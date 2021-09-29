@@ -13,6 +13,16 @@ class MovieTag extends Movie
     public $data;
     public $MovieTagData;
     public $Count;
+
+    /**  
+     * @access public 
+     * @param string $tags 电影标签以","分割
+     * @param int $page 页码
+     * @param string $sort 标记最多:T,近期热门:U,最高评分:S,最新上影:R
+     * @param string $genres 电影类型（剧情、喜剧、动作...)
+     * @param string $country 电影地区（中国大陆、美国、日本...)
+     * @param string $year_range 时间范围（例如：2019,2020）
+     */
     public function __construct($tags = '', $page = 0, $sort = 'U', $genres = '', $country = '', $year_range)
     {
         $this->tags = $tags;
