@@ -103,24 +103,54 @@ class MovieInfo extends Movie
         $this->All['Movie_length'] = $this->get_Movie_length();
         return $this->Json($this->All);
     }
+
+    /**  
+     * 获取电影豆瓣ID
+     * @access public 
+     * @return string
+     */
     public function getId()
     {
         return $this->id;
     }
+
+    /**  
+     * 获取电影豆瓣页面数据
+     * @access public 
+     * @return string
+     */
     public function getData()
     {
         return $this->data;
     }
+
+    /**  
+     * 获取电影的名称（可能含有其他语言）
+     * @access public 
+     * @return string
+     */
     public function getName()
     {
         $this->Name = $this->preg('#"name": "([\s\S]*?)"#', $this->data, 1)[0];
         return $this->Name;
     }
+
+    /**  
+     * 获取电影的中文名称（去除其他语言）
+     * @access public 
+     * @return string
+     */
     public function getChineseName()
     {
         $this->ChineseName = trim(str_replace(array("\n", "\r", "(豆瓣)"), "", $this->preg('#<title>([\s\S]*?)<\/title>#', $this->data, 1)[0]));
         return $this->ChineseName;
     }
+
+    /**  
+     * 获取电影的描述（富文本含<br />）
+     * @access public 
+     * @return string
+     */
     public function getDescription()
     {
         if (strpos($this->data, '<span class="all hidden">') !== false) {
@@ -130,10 +160,15 @@ class MovieInfo extends Movie
         }
         return $this->Description;
     }
+
+    /**  
+     * 获取电影的出版日期（多个只取第一个）
+     * @access public 
+     * @return string
+     */
     public function getDatePublished()
     {
-        $_ = $this->preg('#<span property="v:initialReleaseDate" content="([\s\S]*?)">#', $this->data, 1)[0];
-        $this->DatePublished = $_ == null ? '' : $_;
+        $this->DatePublished = '';
         return $this->DatePublished;
     }
 
