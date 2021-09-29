@@ -1,4 +1,13 @@
 <?php
+
+/** 
+ * 获取名人相关信息 
+ * 
+ * 根据编号获取名人相关信息
+ * @author      xhboke 
+ * @version     1.0
+ */
+
 include_once('class.Movie.php');
 class Celebrity extends Movie
 {
@@ -125,6 +134,14 @@ class Celebrity extends Movie
         return $this->Recent_Movies;
     }
 }
+
+/** 
+ * 获取名人图片 
+ * 
+ * 根据编号获取名人图片
+ * @author      xhboke 
+ * @version     1.0
+ */
 
 class Celebrity_Image extends Celebrity
 {

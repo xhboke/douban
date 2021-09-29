@@ -1,5 +1,13 @@
 <?php
 
+/** 
+ * DouBan
+ * 
+ * 豆瓣的基本变量和方法
+ * @author      xhboke 
+ * @version     1.0
+ */
+
 class DouBan
 {
     public const DouBanUrl = 'https://www.douban.com';
@@ -8,7 +16,7 @@ class DouBan
 
     /**  
      * 获取网页源码
-     * 
+     * @static
      * @access public 
      * @param string $url 目标链接
      * @return string

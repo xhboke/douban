@@ -1,4 +1,13 @@
 <?php
+
+/** 
+ * 指定类型影片
+ * 
+ * 获取指定类型影片，TOP250\各种分类\自定义
+ * @author      xhboke 
+ * @version     1.0
+ */
+
 include_once('class.Movie.php');
 
 class MovieTag extends Movie

@@ -1,4 +1,13 @@
 <?php
+
+/** 
+ * 评论
+ * 
+ * 根据编号获取电影的评论
+ * @author      xhboke 
+ * @version     1.0
+ */
+
 include_once('class.Movie.php');
 class MovieComment extends Movie
 {

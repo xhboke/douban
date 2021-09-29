@@ -1,4 +1,14 @@
 <?php
+
+/** 
+ * 长评论
+ * 
+ * 根据影片编号获取长评论（）
+ * @author      xhboke 
+ * @version     1.0
+ */
+
+
 include_once('class.Movie.php');
 
 /**
@@ -39,8 +49,12 @@ class MovieReviews extends Movie
     }
 };
 
-/**
- * 影片详情
+/** 
+ * 长评论具体
+ * 
+ * 根据评论编号获取具体评论
+ * @author      xhboke 
+ * @version     1.0
  */
 class MovieReviewContext extends Movie
 {

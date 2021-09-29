@@ -1,4 +1,12 @@
 <?php
+
+/** 
+ * 获取影片信息 
+ * 
+ * 根据编号获取电影相关信息
+ * @author      xhboke 
+ * @version     1.0
+ */
 include_once('class.Movie.php');
 
 class MovieInfo extends Movie

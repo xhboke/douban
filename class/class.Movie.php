@@ -1,4 +1,13 @@
 <?php
+
+/** 
+ * Movie
+ * 
+ * 豆瓣电影的基本变量和方法
+ * @author      xhboke 
+ * @version     1.0
+ */
+
 include_once('class.DouBan.php');
 
 class Movie extends DouBan

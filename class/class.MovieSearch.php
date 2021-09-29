@@ -1,4 +1,13 @@
 <?php
+
+/** 
+ * 搜索影片 
+ * 
+ * 根据关键词搜索影片，获取搜索关键词提示
+ * @author      xhboke 
+ * @version     1.0
+ */
+
 include_once('class.Movie.php');
 
 class MovieSearch extends Movie
@@ -9,6 +18,13 @@ class MovieSearch extends Movie
     public $data;
     public $Count;
     public $SearchData;
+
+    /**
+     * 配置搜索电影信息
+     * @access public
+     * @param string $name 搜索影片名称
+     * @param int $page 页码
+     */
     public function __construct($name, $page = 0)
     {
         $this->name = $name;
@@ -18,6 +34,11 @@ class MovieSearch extends Movie
         $this->Count = $this->data->count;
     }
 
+    /**
+     * 获取搜索电影信息
+     * @access public
+     * @return string
+     */
     public function getSearchData()
     {
         if ($this->isEmpty()) {
@@ -40,6 +61,13 @@ class MovieSearch extends Movie
         return $this->Json($this->SearchData);
     }
 
+    /**
+     * 获取搜索影片关键词提示
+     * @static
+     * @access public
+     * @param string $name 搜索词
+     * @return string
+     */
     public static function getSearchSuggest($name)
     {
         $_url = 'https://movie.douban.com/j/subject_suggest?q=' . $name;
@@ -54,12 +82,16 @@ class MovieSearch extends Movie
         return parent::Json($_return);
     }
 
+    /**
+     * 判断搜索结果是否为空
+     * @access private
+     * @return boolean
+     */
     private function isEmpty()
     {
         if ($this->Count == 0) {
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 }
