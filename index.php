@@ -13,11 +13,7 @@ include_once('./class/class.Celebrity.php');
 
 $_type = isset($_GET["type"]) ? $_GET["type"] : '';
 if ($_type == 'year') {
-    $_range = isset($_GET["year_range"]) ? $_GET["year_range"] : 9;
-    $_year = ['1,1959', '1960,1969', '1970,1979', '1980,1989', '1990,1999', '2000,2009', '2010,2019', '2019,2019', '2020,2020', '2021,2021'];
-    $_page = isset($_GET["page"]) ? $_GET["page"] : 0;
-    $obj = new MovieTag('', $_page, 'U', '', '', $_year[$_range]);
-    print_r($obj->getTag());
+    goto year;
 } elseif ($_type == 'info') {
     $_id = isset($_GET["id"]) ? $_GET["id"] : '';
     $_method = isset($_GET["method"]) ? $_GET["method"] : 0;
@@ -143,3 +139,12 @@ if ($_type == 'year') {
         header('Location: https://panguapi.ntryjd.net/jiexi/?url=' . $url);
     }
 }
+
+
+### 
+year:
+$_range = isset($_GET["year_range"]) ? $_GET["year_range"] : '';
+$_year = ['1,1959', '1960,1969', '1970,1979', '1980,1989', '1990,1999', '2000,2009', '2010,2019', '2019,2019', '2020,2020', '2021,2021'];
+$_page = isset($_GET["page"]) ? $_GET["page"] : 0;
+$obj = new MovieTag('', $_page, 'U', '', '', $_year[$_range]);
+print_r($obj->getTag());

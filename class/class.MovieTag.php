@@ -15,6 +15,7 @@ class MovieTag extends Movie
     public $Count;
 
     /**  
+     * 配置指定类型影片
      * @access public 
      * @param string $tags 电影标签以","分割
      * @param int $page 页码
@@ -34,6 +35,12 @@ class MovieTag extends Movie
         $this->url = 'https://movie.douban.com/j/new_search_subjects?sort=' . $this->sort . '&range=0,10&tags=' . $this->tags . '&start=' . $this->page * 20 . '&genres=' . $this->genres . '&countries=' . $this->country . '&year_range=' . $this->year_range;
         $this->data = json_decode($this->curl_get($this->url));
     }
+
+    /**  
+     * 获取指定类型的影片
+     * @access public 
+     * @return string
+     */
     public function getTag()
     {
         $this->MovieTagData = array();
@@ -101,7 +108,8 @@ class MovieTag extends Movie
      */
     static public function NowPlaying()
     {
-        $_url = parent::MovieRootUrl . '/cinema/nowplaying/chengdu/';
+        $_city = "chengdu";
+        $_url = parent::MovieRootUrl . '/cinema/nowplaying/' . $_city . '/';
         $_data = parent::getSubstr(parent::curl_get($_url), '<div id="nowplaying">', '<div id="upcoming">');
         $_ = parent::preg('#id="([\s\S]*?)"([\s\S]*?)data-title="([\s\S]*?)"([\s\S]*?)data-score="([\s\S]*?)"([\s\S]*?)data-star="([\s\S]*?)"([\s\S]*?)data-release="([\s\S]*?)"([\s\S]*?)data-duration="([\s\S]*?)"([\s\S]*?)data-region="([\s\S]*?)"([\s\S]*?)data-director="([\s\S]*?)"([\s\S]*?)data-actors="([\s\S]*?)"([\s\S]*?)data-votecount="([\s\S]*?)"([\s\S]*?)<img src="([\s\S]*?)"#', $_data, 0);
         $_count = count($_[1]);

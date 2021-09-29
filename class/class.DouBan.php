@@ -113,7 +113,8 @@ class DouBan
     /**
      * 数据转为Json格式
      * @access public
-     * @param array $array 数组
+     * @param array
+     * @return string
      */
     static public function Json($array)
     {
