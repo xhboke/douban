@@ -64,6 +64,7 @@ class MovieTag extends Movie
     /**
      * Top250
      * @param int $page 页数
+     * @return string
      */
     static public function getTop250($page)
     {
@@ -105,6 +106,7 @@ class MovieTag extends Movie
 
     /**
      * NowPlaying 正在上映
+     * @return string
      */
     static public function NowPlaying()
     {

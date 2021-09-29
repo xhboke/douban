@@ -28,6 +28,7 @@ class MovieInfo extends Movie
     public $EpisodeUrl;
     public $All;
     public $OtherLike;
+
     public function __construct($id)
     {
         $this->id = $id;
@@ -38,6 +39,13 @@ class MovieInfo extends Movie
     {
     }
 
+    /**  
+     * 获取指定电影的信息
+     * @access public 
+     * @param boolean $isAccurate 电影播放链接不存在下使用外部播放链接
+     * @param boolean $is_play_url 从豆瓣电影获取电影的播放链接
+     * @return string
+     */
     public function getAll($isAccurate = false, $is_play_url = True)
     {
         $this->All['Id'] = $this->getId();
@@ -74,6 +82,11 @@ class MovieInfo extends Movie
         return $this->Json($this->All);
     }
 
+    /**  
+     * 只获取电影的基本信息
+     * @access public 
+     * @return string
+     */
     public function get_INFO()
     {
         $this->All['Id'] = $this->getId();

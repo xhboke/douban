@@ -15,20 +15,7 @@ $_type = isset($_GET["type"]) ? $_GET["type"] : '';
 if ($_type == 'year') {
     goto year;
 } elseif ($_type == 'info') {
-    $_id = isset($_GET["id"]) ? $_GET["id"] : '';
-    $_method = isset($_GET["method"]) ? $_GET["method"] : 0;
-    $obj = new MovieInfo($_id);
-    if ($obj->isId()) {
-        if ($_method == 0) {
-            print_r($obj->getAll(True));
-        } elseif ($_method == 99) {
-            print_r($obj->get_INFO());
-        } else {
-            print_r($obj->getAll(false, false));
-        }
-    } else {
-        print_r($obj->Json(['Check whether the ID(' . $_id . ') is correct!']));
-    }
+    goto info;
 } elseif ($_type == 'search') {
     $_s = isset($_GET["s"]) ? $_GET["s"] : '';
     $_page = isset($_GET["page"]) ? $_GET["page"] : 0;
@@ -141,10 +128,27 @@ if ($_type == 'year') {
 }
 
 
-### 
+### 根据年代返回影片
 year:
-$_range = isset($_GET["year_range"]) ? $_GET["year_range"] : '';
+$_range = isset($_GET["year_range"]) ? $_GET["year_range"] : '9';
 $_year = ['1,1959', '1960,1969', '1970,1979', '1980,1989', '1990,1999', '2000,2009', '2010,2019', '2019,2019', '2020,2020', '2021,2021'];
 $_page = isset($_GET["page"]) ? $_GET["page"] : 0;
 $obj = new MovieTag('', $_page, 'U', '', '', $_year[$_range]);
 print_r($obj->getTag());
+
+### 返回电影信息
+info:
+$_id = isset($_GET["id"]) ? $_GET["id"] : '';
+$_method = isset($_GET["method"]) ? $_GET["method"] : 0;
+$obj = new MovieInfo($_id);
+if ($obj->isId()) {
+    if ($_method == 0) {
+        print_r($obj->getAll(True));
+    } elseif ($_method == 99) {
+        print_r($obj->get_INFO());
+    } else {
+        print_r($obj->getAll(false, false));
+    }
+} else {
+    print_r($obj->Json(['Check whether the ID(' . $_id . ') is correct!']));
+}
