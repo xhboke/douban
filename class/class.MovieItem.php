@@ -168,7 +168,7 @@ class MovieInfo extends Movie
      */
     public function getDatePublished()
     {
-        $this->DatePublished = '';
+        $this->DatePublished = str_replace(" ", '', strip_tags($this->preg('#<span property="v:initialReleaseDate" content="([\s\S]*?)">#', $this->data, 1)[0]));
         return $this->DatePublished;
     }
 
