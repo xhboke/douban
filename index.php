@@ -12,37 +12,40 @@ include_once('./class/class.MovieTag.php');
 include_once('./class/class.Celebrity.php');
 
 $_type = isset($_GET["type"]) ? $_GET["type"] : '';
-if ($_type == 'year') {
-    goto year;
-} elseif ($_type == 'info') {
-    goto info;
-} elseif ($_type == 'search') {
-    goto search;
-} elseif ($_type == 'search_suggest') {
-    goto search_suggest;
-} elseif ($_type == 'review') {
-    goto review;
-} elseif ($_type == 'comment') {
-    goto comment;
-} elseif ($_type == 'review_context') {
-    goto review_context;
-} elseif ($_type == 'celebrity') {
-    goto celebrity;
-} elseif ($_type == 'tag') {
-    goto tag;
-} elseif ($_type == 'top250') {
-    goto top250;
-} elseif ($_type == 'indexM') {
-    goto indexM;
-} elseif ($_type == 'indexT') {
-    goto indexT;
-} elseif ($_type == 'nowplaying') {
-    goto nowplaying;
-} elseif ($_type == 'carousel') {
-    goto carousel;
-} else {
-    goto play;
+
+switch ($_type) {
+    case 'year':
+        goto year;
+    case 'info':
+        goto info;
+    case 'search':
+        goto search;
+    case 'search_suggest':
+        goto search_suggest;
+    case 'review':
+        goto review;
+    case 'comment':
+        goto comment;
+    case 'review_context':
+        goto review_context;
+    case 'celebrity':
+        goto celebrity;
+    case 'tag':
+        goto tag;
+    case 'top250':
+        goto top250;
+    case 'indexM':
+        goto indexM;
+    case 'indexT':
+        goto indexT;
+    case 'nowplaying':
+        goto nowplaying;
+    case 'carousel':
+        goto carousel;
+    default:
+        goto play;
 }
+
 
 /***************************************************************************************************/
 ### 播放影片
@@ -53,14 +56,12 @@ if (empty($url)) {
 } else {
     header('Location: https://panguapi.ntryjd.net/jiexi/?url=' . $url);
 }
-exit;
 
 /***************************************************************************************************/
 ### 首页幻灯片
 carousel:
 $jsonstr = file_get_contents('./.cache/carousel.json');
 echo $jsonstr;
-exit;
 
 /***************************************************************************************************/
 ### 根据年代返回影片
@@ -70,7 +71,6 @@ $_year = ['1,1959', '1960,1969', '1970,1979', '1980,1989', '1990,1999', '2000,20
 $_page = isset($_GET["page"]) ? $_GET["page"] : 0;
 $obj = new MovieTag('', $_page, 'U', '', '', $_year[$_range]);
 print_r($obj->getTag());
-exit;
 
 /***************************************************************************************************/
 ### 返回电影信息
@@ -89,7 +89,6 @@ if ($obj->isId()) {
 } else {
     print_r($obj->Json(['Check whether the ID(' . $_id . ') is correct!']));
 }
-exit;
 
 /***************************************************************************************************/
 ### 搜索电影
@@ -98,14 +97,12 @@ $_s = isset($_GET["s"]) ? $_GET["s"] : '';
 $_page = isset($_GET["page"]) ? $_GET["page"] : 0;
 $obj = new MovieSearch($_s, $_page);
 print_r($obj->getSearchData());
-exit;
 
 /***************************************************************************************************/
 ### 搜索关键词建议
 search_suggest:
 $_name = isset($_GET["name"]) ? $_GET["name"] : exit();
 print_r(MovieSearch::getSearchSuggest($_name));
-exit;
 
 /***************************************************************************************************/
 ### 评论
@@ -119,7 +116,6 @@ if ($obj->isId()) {
 } else {
     print_r($obj->Json(['Check whether the ID(' . $_id . ') is correct!']));
 }
-exit;
 
 comment:
 $_id = isset($_GET["id"]) ? $_GET["id"] : '';
@@ -134,7 +130,6 @@ if ($obj->isId()) {
 } else {
     print_r($obj->Json(['Check whether the ID(' . $_id . ') is correct!']));
 }
-exit;
 
 /***************************************************************************************************/
 ### 评论内容
@@ -146,7 +141,6 @@ if ($obj->isId()) {
 } else {
     print_r($obj->Json(['Check whether the ID(' . $_id . ') is correct!']));
 }
-exit;
 
 /***************************************************************************************************/
 ### 名人
@@ -158,7 +152,6 @@ if ($obj->isId()) {
 } else {
     print_r($obj->Json(['Check whether the ID(' . $_id . ') is correct!']));
 }
-exit;
 
 /***************************************************************************************************/
 ### 影片标签
@@ -171,14 +164,12 @@ $_country = isset($_GET["country"]) ? $_GET["country"] : '';
 $_year_range = isset($_GET["year_range"]) ? $_GET["year_range"] : '';
 $obj = new MovieTag($_tags, $_page, $_sort, $_genres, $_country, $_year_range);
 print_r($obj->getTag());
-exit;
 
 /***************************************************************************************************/
 ### 影片排行榜
 top250:
 $_page = isset($_GET["page"]) ? $_GET["page"] : 0;
 print_r(MovieTag::getTop250($_page));
-exit;
 
 /***************************************************************************************************/
 ### 首页电影
@@ -195,7 +186,6 @@ if ($_method == 0) {
         echo 'indexM,Error!';
     }
 }
-exit;
 
 /***************************************************************************************************/
 ### 首页电视剧
@@ -212,7 +202,6 @@ if ($_method == 0) {
         echo 'indexT,Error!';
     }
 }
-exit;
 
 /***************************************************************************************************/
 ### 正在热播
@@ -229,4 +218,3 @@ if ($_method == 0) {
         echo 'nowplaying,Error!';
     }
 }
-exit;
