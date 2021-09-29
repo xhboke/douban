@@ -169,10 +169,16 @@ class MovieInfo extends Movie
     public function getDatePublished()
     {
         $_ = $this->preg('#<span property="v:initialReleaseDate" content="([\s\S]*?)">#', $this->data, 1)[0];
-        $this->DatePublished = $_ == null ? '' : $_;
+        $_ = $_ == null ? '' : $_;
+        $this->DatePublished = str_replace(" ", '', strip_tags($_));
         return $this->DatePublished;
     }
 
+    /**  
+     * 获取电影的语言
+     * @access public 
+     * @return string
+     */
     public function get_Language()
     {
         $_ =  trim($this->preg('#语言:<\/span>([\s\S]*?)<br\/>#', $this->data, 1)[0]);
@@ -180,33 +186,67 @@ class MovieInfo extends Movie
         return $this->Language;
     }
 
+    /**  
+     * 获取电影的其他名称（多个以"/"分割）
+     * @access public 
+     * @return string
+     */
     public function get_Other_name()
     {
         $this->Other_name = str_replace(" ", '', strip_tags($this->preg('#又名:<\/span>([\s\S]*?)<br\/>#', $this->data, 1)[0]));
         return $this->Other_name;
     }
 
+    /**  
+     * 获取电影的类型
+     * @access public 
+     * @return array
+     */
     public function getGenre()
     {
         $this->Genre = $this->preg('#<span property="v:genre">([\s\S]*?)<\/span>#', $this->data, 1);
         return $this->Genre;
     }
+
+    /**  
+     * 获取电影的评分
+     * @access public 
+     * @return string
+     */
     public function getRating()
     {
         $this->Rating = $this->preg('#property="v:average">([\s\S]*?)<\/strong>#', $this->data, 1)[0];
         return $this->Rating;
     }
+
+    /**  
+     * 获取电影的评分人数
+     * @access public 
+     * @return string
+     */
     public function getVotes()
     {
         $_ = $this->preg('#<span property="v:votes">([\s\S]*?)<\/span>#', $this->data, 1)[0];
         $this->Votes = $_ == null ? '' : $_;
         return $this->Votes;
     }
+
+    /**  
+     * 获取电影的海报
+     * @access public 
+     * @return string
+     */
     public function getImage()
     {
         $this->Image = $this->preg('#"image": "([\s\S]*?)",#', $this->data, 1)[0];
         return $this->Image;
     }
+
+    /**  
+     * 获取电影的年代
+     * @access public 
+     * @return string
+     */
     public function getYear()
     {
         if (strpos($this->data, '<span class="year">') !== false) {
@@ -218,11 +258,23 @@ class MovieInfo extends Movie
         }
         return $this->Year;
     }
+
+    /**  
+     * 获取电影的IMDB编号
+     * @access public 
+     * @return string
+     */
     public function getIMDB()
     {
         $this->IMDB = trim($this->preg('#IMDb:<\/span>([\s\S]*?)<br>#', $this->data, 1)[0]);
         return $this->IMDB;
     }
+
+    /**  
+     * 获取电影参与演员（包含头像）
+     * @access public 
+     * @return array
+     */
     public function getActor()
     {
         $_ActorInfo = $this->preg('#<div class="avatar" style="background-image: url\(([\s\S]*?)\)">([\s\S]*?)<span class="name"><a href="https:\/\/movie.douban.com\/celebrity\/([\s\S]*?)/" title="([\s\S]*?)" class="name">([\s\S]*?)<\/a>([\s\S]*?)<span class="role" title="([\s\S]*?)">#', $this->data, 0);
@@ -236,18 +288,33 @@ class MovieInfo extends Movie
         return $this->Actor;
     }
 
+    /**  
+     * 获取电视剧的集数
+     * @access public 
+     * @return string
+     */
     public function getEpisode()
     {
         $this->Episode = trim($this->preg('#集数:<\/span>([\s\S]*?)<br\/>#', $this->data, 1)[0]);
         return $this->Episode;
     }
 
+    /**  
+     * 获取电视剧的单集片长
+     * @access public 
+     * @return string
+     */
     public function get_Single_episode_length()
     {
         $this->Single_episode_length = trim($this->preg('#单集片长:<\/span>([\s\S]*?)<br\/>#', $this->data, 1)[0]);
         return $this->Single_episode_length;
     }
 
+    /**  
+     * 获取电影的时长
+     * @access public 
+     * @return string
+     */
     public function get_Movie_length()
     {
         $_ = $this->preg('#<span property="v:runtime" content="([\s\S]*?)">([\s\S]*?)<\/span>#', $this->data, 2)[0];
@@ -256,8 +323,10 @@ class MovieInfo extends Movie
         return $this->Movie_length;
     }
 
-    /**
+    /**  
      * 获取所有的导演
+     * @access public 
+     * @return string
      */
     public function get_All_directors()
     {
@@ -267,8 +336,10 @@ class MovieInfo extends Movie
         return $this->All_directors;
     }
 
-    /**
-     * 获取所有的导演
+    /**  
+     * 获取所有的编剧
+     * @access public 
+     * @return string
      */
     public function get_All_writers()
     {
@@ -278,8 +349,10 @@ class MovieInfo extends Movie
         return $this->All_writers;
     }
 
-    /**
+    /**  
      * 获取所有的演员
+     * @access public 
+     * @return string
      */
     public function get_All_actors()
     {
@@ -289,8 +362,10 @@ class MovieInfo extends Movie
         return $this->All_actors;
     }
 
-    /**
-     * 获取制片国家/地区
+    /**  
+     * 获取所有的地区
+     * @access public 
+     * @return string
      */
     public function get_region()
     {
@@ -300,6 +375,11 @@ class MovieInfo extends Movie
         return $this->region;
     }
 
+    /**  
+     * 获取影片播放链接
+     * @access public 
+     * @return array
+     */
     public function getEpisodeUrl()
     {
         // 有播放链接的标识
@@ -324,6 +404,11 @@ class MovieInfo extends Movie
         return $this->EpisodeUrl;
     }
 
+    /**  
+     * 获取其他影片推荐
+     * @access public 
+     * @return array
+     */
     public function getOtherLike()
     {
         $_data = $this->getSubstr($this->data, '<div class="recommendations-bd">', '</div>');
@@ -343,6 +428,11 @@ class MovieInfo extends Movie
         }
     }
 
+    /**  
+     * 获取电视剧对应的播放链接
+     * @access private 
+     * @return array
+     */
     private function getTVSeriesEpisodeUrl()
     {
         //播放链接在本页面
@@ -377,6 +467,12 @@ class MovieInfo extends Movie
             return $this->doubanUrlToUrl($PlayUrl);
         }
     }
+
+    /**  
+     * 获取电影对应的播放链接
+     * @access private 
+     * @return array
+     */
     private function getMovieEpisodeUrl()
     {
         preg_match_all('#<a class="playBtn" data-cn="(.*?)"([\s\S]*?)href="(.*?)"([\s\S]*?)>#', $this->data, $PlayList);
@@ -389,7 +485,6 @@ class MovieInfo extends Movie
 
     /**  
      * 去除播放链接中的豆瓣链接
-     * 
      * @access private 
      * @param mixed $DoubanUrl 豆瓣播放链接
      * @return array
@@ -410,12 +505,10 @@ class MovieInfo extends Movie
 
 
     /**
-     * 获取外部播放链接
-     * 
+     * 获取电影的外部播放链接
      * @access private
-     * @param mixed $wd 搜索影片名称
+     * @param string $wd 搜索影片名称
      * @return array
-     * 
      */
     private function get_Out_Play_Url($_wd)
     {

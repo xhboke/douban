@@ -49,17 +49,18 @@ if ($_type == 'year') {
 play:
 $url = isset($_GET['url']) ? $_GET['url'] : '';
 if (empty($url)) {
-    echo '请选择播放链接';
+    echo 'error';
 } else {
     header('Location: https://panguapi.ntryjd.net/jiexi/?url=' . $url);
 }
-
+exit;
 
 /***************************************************************************************************/
 ### 首页幻灯片
 carousel:
 $jsonstr = file_get_contents('./.cache/carousel.json');
 echo $jsonstr;
+exit;
 
 /***************************************************************************************************/
 ### 根据年代返回影片
@@ -70,6 +71,7 @@ $_page = isset($_GET["page"]) ? $_GET["page"] : 0;
 $obj = new MovieTag('', $_page, 'U', '', '', $_year[$_range]);
 print_r($obj->getTag());
 exit;
+
 /***************************************************************************************************/
 ### 返回电影信息
 info:
@@ -88,6 +90,7 @@ if ($obj->isId()) {
     print_r($obj->Json(['Check whether the ID(' . $_id . ') is correct!']));
 }
 exit;
+
 /***************************************************************************************************/
 ### 搜索电影
 search:
@@ -95,11 +98,15 @@ $_s = isset($_GET["s"]) ? $_GET["s"] : '';
 $_page = isset($_GET["page"]) ? $_GET["page"] : 0;
 $obj = new MovieSearch($_s, $_page);
 print_r($obj->getSearchData());
+exit;
+
 /***************************************************************************************************/
 ### 搜索关键词建议
 search_suggest:
 $_name = isset($_GET["name"]) ? $_GET["name"] : exit();
 print_r(MovieSearch::getSearchSuggest($_name));
+exit;
+
 /***************************************************************************************************/
 ### 评论
 review:
@@ -112,6 +119,8 @@ if ($obj->isId()) {
 } else {
     print_r($obj->Json(['Check whether the ID(' . $_id . ') is correct!']));
 }
+exit;
+
 comment:
 $_id = isset($_GET["id"]) ? $_GET["id"] : '';
 $_page = isset($_GET["page"]) ? $_GET["page"] : 0;
@@ -125,6 +134,8 @@ if ($obj->isId()) {
 } else {
     print_r($obj->Json(['Check whether the ID(' . $_id . ') is correct!']));
 }
+exit;
+
 /***************************************************************************************************/
 ### 评论内容
 review_context:
@@ -135,6 +146,8 @@ if ($obj->isId()) {
 } else {
     print_r($obj->Json(['Check whether the ID(' . $_id . ') is correct!']));
 }
+exit;
+
 /***************************************************************************************************/
 ### 名人
 celebrity:
@@ -145,7 +158,7 @@ if ($obj->isId()) {
 } else {
     print_r($obj->Json(['Check whether the ID(' . $_id . ') is correct!']));
 }
-
+exit;
 
 /***************************************************************************************************/
 ### 影片标签
@@ -158,13 +171,14 @@ $_country = isset($_GET["country"]) ? $_GET["country"] : '';
 $_year_range = isset($_GET["year_range"]) ? $_GET["year_range"] : '';
 $obj = new MovieTag($_tags, $_page, $_sort, $_genres, $_country, $_year_range);
 print_r($obj->getTag());
+exit;
 
 /***************************************************************************************************/
 ### 影片排行榜
 top250:
 $_page = isset($_GET["page"]) ? $_GET["page"] : 0;
 print_r(MovieTag::getTop250($_page));
-
+exit;
 
 /***************************************************************************************************/
 ### 首页电影
@@ -181,6 +195,7 @@ if ($_method == 0) {
         echo 'indexM,Error!';
     }
 }
+exit;
 
 /***************************************************************************************************/
 ### 首页电视剧
@@ -197,6 +212,7 @@ if ($_method == 0) {
         echo 'indexT,Error!';
     }
 }
+exit;
 
 /***************************************************************************************************/
 ### 正在热播
@@ -213,3 +229,4 @@ if ($_method == 0) {
         echo 'nowplaying,Error!';
     }
 }
+exit;
