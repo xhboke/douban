@@ -14,7 +14,7 @@ class Celebrity extends Movie
     public $id;
     public $url;
     public $data;
-    public $Name;
+    public $Name, $ChineseName;
     public $Image;
     public $Sex;
     public $Constellation;
@@ -27,7 +27,7 @@ class Celebrity extends Movie
     public $Introduction;
 
     public $Some_Images;
-    public $Recent_Movies;
+    public $Recent_Movies, $Award;
     public $All;
     public function __construct($id)
     {
@@ -40,6 +40,7 @@ class Celebrity extends Movie
     {
         $this->All['id'] = $this->id;
         $this->All['name'] = $this->getName();
+        $this->All['chineseName'] = $this->getChineseName();
         $this->All['image'] = $this->getImage();
         $this->All['sex'] = $this->getSex();
         $this->All['constellation'] = $this->getConstellation();
@@ -51,6 +52,7 @@ class Celebrity extends Movie
         $this->All['website'] = $this->getWebsite();
         $this->All['introduction'] = $this->getIntroduction();
         $this->All['some_images'] = $this->get_Some_Images();
+        $this->All['award'] = $this->get_Award();
         $this->All['recent_movies'] = $this->get_Recent_Movies();
         return $this->Json($this->All);
     }
@@ -59,9 +61,14 @@ class Celebrity extends Movie
         $this->Name = trim($this->preg('#<h1>([\s\S]*?)<\/h1>#', $this->data, 1)[0]);
         return $this->Name;
     }
+    public function getChineseName()
+    {
+        $this->ChineseName = trim($this->preg('#<div class="nbg" title="([\s\S]*?)">#', $this->data, 1)[0]);
+        return $this->ChineseName;
+    }
     public function getImage()
     {
-        $this->Image = trim($this->preg('#<img class="media" src="([\s\S]*?)" \/>#', $this->data, 1)[0]);
+        $this->Image = trim($this->preg('#<meta property="og:image" content="([\s\S]*?)" \/>#', $this->data, 1)[0]);
         return $this->Image;
     }
     public function getSex()
@@ -86,17 +93,17 @@ class Celebrity extends Movie
     }
     public function getProfession()
     {
-        $this->Profession = trim($this->preg('#<span>职业<\/span>:([\s\S]*?)<\/li>#', $this->data, 1)[0]);
+        $this->Profession = str_replace(" ", "", trim($this->preg('#<span>职业<\/span>:([\s\S]*?)<\/li>#', $this->data, 1)[0]));
         return $this->Profession;
     }
     public function getOthername()
     {
-        $this->Othername = trim($this->preg('#<span>更多外文名<\/span>:([\s\S]*?)<\/li>#', $this->data, 1)[0]);
+        $this->Othername = str_replace(" ", "", trim($this->preg('#<span>更多外文名<\/span>:([\s\S]*?)<\/li>#', $this->data, 1)[0]));
         return $this->Othername;
     }
     public function getFamilymember()
     {
-        $this->Familymember = trim(preg_replace("/<a[^>]*>(.*?)<\/a>/is", "$1", $this->preg('#<span>家庭成员<\/span>:([\s\S]*?)<\/li>#', $this->data, 1)[0]));
+        $this->Familymember = str_replace(" ", "", trim(preg_replace("/<a[^>]*>(.*?)<\/a>/is", "$1", $this->preg('#<span>家庭成员<\/span>:([\s\S]*?)<\/li>#', $this->data, 1)[0])));
         return $this->Familymember;
     }
     public function getWebsite()
@@ -132,6 +139,31 @@ class Celebrity extends Movie
             //throw $th;
         }
         return $this->Recent_Movies;
+    }
+    public function get_Award()
+    {
+        try {
+            $_data = $this->preg('#<ul class="award">([\s\S]*?)</ul>#', $this->data, 1);
+            $_count = count($_data);
+            for ($i = 0; $i < $_count; $i++) {
+                $item = $this->preg('#<li class="">([\s\S]*?)</li>([\s\S]*?)<li class="">([\s\S]*?)<a href="([\s\S]*?)">([\s\S]*?)<\/a>([\s\S]*?)<\/li>([\s\S]*?)<li class="">([\s\S]*?)<\/li>([\s\S]*?)<li class="">([\s\S]*?)<\/li>#', $_data[$i], 0);
+                $this->Award[$i]['year'] = $item[1][0];
+                $this->Award[$i]['awards_url'] = $item[4][0];
+                $this->Award[$i]['awards_name'] = $item[5][0];
+                $this->Award[$i]['award'] = $item[8][0];
+                if (empty($item[10][0])) {
+                    $this->Award[$i]['movie_id'] = "";
+                    $this->Award[$i]['movie_name'] = "";
+                } else {
+                    $this->Award[$i]['movie_id'] = $this->preg('#<a href=\'https:\/\/movie.douban.com\/subject\/([\s\S]*?)\/\' target=\'_blank\'>([\s\S]*?)<\/a>#', $item[10][0], 1)[0];
+                    $this->Award[$i]['movie_name'] = $this->preg('#<a href=\'https:\/\/movie.douban.com\/subject\/([\s\S]*?)\/\' target=\'_blank\'>([\s\S]*?)<\/a>#', $item[10][0], 2)[0];
+                }
+            }
+        } catch (\Throwable $th) {
+            $this->Award = null;
+        }
+
+        return $this->Award;
     }
 }
 
