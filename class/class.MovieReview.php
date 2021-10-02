@@ -45,7 +45,7 @@ class MovieReviews extends Movie
             $this->Reviews[$i]['useful_count'] = trim($_data[16][$i]);
             $this->Reviews[$i]['useless_count'] = trim($_data[19][$i]);
         }
-        return $this->Json($this->Reviews);
+        return $this->Reviews;
     }
 };
 
@@ -104,6 +104,6 @@ class MovieReviewContext extends Movie
         $this->All['reviewer'] = $this->getReviewer();
         $this->All['movie'] = $this->getMovieInfo();
         $this->All['context'] = $this->getContext();
-        return $this->Json($this->All);
+        return $this->All;
     }
 };

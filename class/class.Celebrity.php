@@ -54,7 +54,7 @@ class Celebrity extends Movie
         $this->All['some_images'] = $this->get_Some_Images();
         $this->All['award'] = $this->get_Award();
         $this->All['recent_movies'] = $this->get_Recent_Movies();
-        return $this->Json($this->All);
+        return $this->All;
     }
     public function getName()
     {

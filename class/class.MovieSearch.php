@@ -37,7 +37,7 @@ class MovieSearch extends Movie
     /**
      * 获取搜索电影信息
      * @access public
-     * @return string
+     * @return array
      */
     public function getSearchData()
     {
@@ -58,7 +58,7 @@ class MovieSearch extends Movie
             $this->SearchData['count'] = 0;
             $this->SearchData['data'] = [];
         }
-        return $this->Json($this->SearchData);
+        return $this->SearchData;
     }
 
     /**
@@ -66,7 +66,7 @@ class MovieSearch extends Movie
      * @static
      * @access public
      * @param string $name 搜索词
-     * @return string
+     * @return array
      */
     public static function getSearchSuggest($name)
     {
@@ -79,7 +79,7 @@ class MovieSearch extends Movie
         for ($i = 0; $i < $_count; $i++) {
             $_return[$i] = $_json[$i]['title'];
         }
-        return parent::Json($_return);
+        return $_return;
     }
 
     /**

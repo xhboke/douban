@@ -29,7 +29,7 @@ class MovieInfo extends Movie
      * @access public 
      * @param boolean $isAccurate 电影播放链接不存在下使用外部播放链接
      * @param boolean $is_play_url 从豆瓣电影获取电影的播放链接
-     * @return string
+     * @return array
      */
     public function getAll($isAccurate = false, $is_play_url = True)
     {
@@ -64,13 +64,13 @@ class MovieInfo extends Movie
             $this->All['EpisodeUrl']['type'] = 'movie';
         }
         $this->All['OtherLike'] = $this->getOtherLike();
-        return $this->Json($this->All);
+        return $this->All;
     }
 
     /**  
      * 只获取电影的基本信息
      * @access public 
-     * @return string
+     * @return array
      */
     public function get_INFO()
     {
@@ -86,7 +86,7 @@ class MovieInfo extends Movie
         $this->All['Description'] = $this->getDescription();
         $this->All['Single_episode_length'] = trim($this->get_Single_episode_length());
         $this->All['Movie_length'] = $this->get_Movie_length();
-        return $this->Json($this->All);
+        return $this->All;
     }
 
     /**  

@@ -53,6 +53,6 @@ class MovieComment extends Movie
             $this->Comments[20 * $this->page + $i]['time'] = $_data[12][$i];
             $this->Comments[20 * $this->page + $i]['content'] = $_data[14][$i];
         }
-        return $this->Json($this->Comments);
+        return $this->Comments;
     }
 };

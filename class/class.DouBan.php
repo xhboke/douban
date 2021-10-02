@@ -117,15 +117,4 @@ class DouBan
             return trim($params);
         return array_map([__CLASS__, 'trimArray'], $params);
     }
-
-    /**
-     * 数据转为Json格式
-     * @access public
-     * @param array
-     * @return string
-     */
-    static public function Json($array)
-    {
-        return json_encode($array, JSON_UNESCAPED_UNICODE | JSON_FORCE_OBJECT);
-    }
 };

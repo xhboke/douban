@@ -48,7 +48,7 @@ class MovieTag extends Movie
     /**  
      * 获取指定类型的影片
      * @access public 
-     * @return string
+     * @return array
      */
     public function getTag()
     {
@@ -67,13 +67,13 @@ class MovieTag extends Movie
         } else {
             $this->MovieTagData['data'] = [];
         }
-        return $this->Json($this->MovieTagData);
+        return $this->MovieTagData;
     }
 
     /**
      * 获取豆瓣电影250榜单
      * @param int $page 页数
-     * @return string
+     * @return array
      */
     static public function getTop250($page)
     {
@@ -94,7 +94,7 @@ class MovieTag extends Movie
         } else {
             $_return = [];
         }
-        return parent::Json($_return);
+        return $_return;
     }
 
     static public function getIndexMovie($MovieType = '热门', $MovieSort = 'recommend', $page_limit = '24', $page = 1)
@@ -115,7 +115,7 @@ class MovieTag extends Movie
 
     /**
      * NowPlaying 正在上映
-     * @return string
+     * @return array
      */
     static public function NowPlaying()
     {
@@ -136,6 +136,6 @@ class MovieTag extends Movie
             $_return[$i]['votecount'] = $_[19][$i];
             $_return[$i]['image'] = $_[21][$i];
         }
-        return parent::Json($_return);
+        return $_return;
     }
 }
