@@ -1,3 +1,10 @@
+
+![](https://img.shields.io/badge/豆瓣电影-API-fff)
+![](https://img.shields.io/github/stars/xhboke/douban?style=social)
+![](https://img.shields.io/github/forks/xhboke/douban?style=social&label=Fork)
+![](https://img.shields.io/github/languages/top/xhboke/douban)
+![GitHub](https://img.shields.io/npm/l/express.svg)
+
 ## 安装说明
 
 * 本地测试
