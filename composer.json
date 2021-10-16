@@ -1,18 +1,18 @@
 {
-    "name": "topthink/think",
-    "description": "the new thinkphp framework",
+    "name": "xhboke/douban",
+    "description": "the api of douban movie",
     "type": "project",
     "keywords": [
-        "framework",
-        "thinkphp",
-        "ORM"
+        "douban",
+        "movie",
+        "API"
     ],
-    "homepage": "http://thinkphp.cn/",
-    "license": "Apache-2.0",
+    "homepage": "https://api.xhboke.com/doc/movie",
+    "license": "MIT",
     "authors": [
         {
-            "name": "liu21st",
-            "email": "liu21st@gmail.com"
+            "name": "xhboke",
+            "email": "xhapame@gmail.com"
         }
     ],
     "require": {
