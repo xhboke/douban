@@ -473,9 +473,9 @@ class MovieInfo extends Movie
      * 去除播放链接中的豆瓣链接
      * @access private
      * @param mixed $DoubanUrl 豆瓣播放链接
-     * @return array
+     * @return mixed
      */
-    private function doubanUrlToUrl(&$DoubanUrl): array
+    private function doubanUrlToUrl(&$DoubanUrl)
     {
         $DoubanUrl = str_replace('https://www.douban.com/link2/?url=', '', $DoubanUrl);
         $DoubanUrl = str_replace('http://www.douban.com/link2/?url=', '', $DoubanUrl);
