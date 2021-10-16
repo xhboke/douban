@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "php": ">=7.0",
+        "php": ">=7.4",
         "topthink/framework": "5.1.*"
     },
     "autoload": {
