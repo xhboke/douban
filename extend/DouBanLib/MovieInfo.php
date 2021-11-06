@@ -265,16 +265,20 @@ class MovieInfo extends Movie
      */
     public function getActor(): array
     {
-        $_ActorInfo = $this->preg('#<div class="avatar" style="background-image: url\(([\s\S]*?)\)">([\s\S]*?)<span class="name"><a href="https:\/\/movie.douban.com\/celebrity\/([\s\S]*?)/" title="([\s\S]*?)" class="name">([\s\S]*?)<\/a>([\s\S]*?)<span class="role" title="([\s\S]*?)">#', $this->data, 0);
-        $_count = count($_ActorInfo[0]);
-        for ($i = 0; $i < $_count; $i++) {
-            $this->Actor[$i]['ActorId'] = $_ActorInfo[3][$i];
-            $this->Actor[$i]['ActorName'] = $_ActorInfo[5][$i];
-            $this->Actor[$i]['ActorNameChinese'] = $_ActorInfo[4][$i];
-            $this->Actor[$i]['ActorImage'] = $_ActorInfo[1][$i];
-            $this->Actor[$i]['ActorRole'] = $_ActorInfo[7][$i];
+        try {
+            $_ActorInfo = $this->preg('#<div class="avatar" style="background-image: url\(([\s\S]*?)\)">([\s\S]*?)<span class="name"><a href="https:\/\/movie.douban.com\/celebrity\/([\s\S]*?)/" title="([\s\S]*?)" class="name">([\s\S]*?)<\/a>([\s\S]*?)<span class="role" title="([\s\S]*?)">#', $this->data, 0);
+            $_count = count($_ActorInfo[0]);
+            for ($i = 0; $i < $_count; $i++) {
+                $this->Actor[$i]['ActorId'] = $_ActorInfo[3][$i];
+                $this->Actor[$i]['ActorName'] = $_ActorInfo[5][$i];
+                $this->Actor[$i]['ActorNameChinese'] = $_ActorInfo[4][$i];
+                $this->Actor[$i]['ActorImage'] = $_ActorInfo[1][$i];
+                $this->Actor[$i]['ActorRole'] = $_ActorInfo[7][$i];
+            }
+            return $this->Actor;
+        } catch (\Throwable $th) {
+            return array();
         }
-        return $this->Actor;
     }
 
     /**
