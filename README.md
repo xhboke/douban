@@ -39,6 +39,8 @@ location / {
 }
 ~~~
 
+同时关闭调试模式 `/config/app.php` : `'app_debug' => true`  ==> `'app_debug' => false` 
+
 ## 注意
 
 频繁使用会导致封禁IP，目前可通过更换IP或者使用代理或者是登录获取Cookie的方式避免。
