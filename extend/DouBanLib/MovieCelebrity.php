@@ -162,7 +162,7 @@ class MovieCelebrity extends Movie
                 $this->RecentMovies[$i]['title'] = $_data[5][$i];
             }
         } catch (\Throwable $th) {
-            $this->RecentMovies = null;
+            $this->RecentMovies = [];
         }
         return $this->RecentMovies;
     }
@@ -220,7 +220,7 @@ class MovieCelebrity extends Movie
             }
             $this->Partners = $_return;
         } catch (\Throwable $th) {
-            $this->Partners = null;
+            $this->Partners = [];
         }
         return $this->Partners;
     }

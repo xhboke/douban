@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 影片信息
  *
@@ -17,7 +18,7 @@ class Info
     public function getMovieInfo($id): \think\response\Json
     {
         $obj = new MovieInfo($id);
-        return json($obj->getAll(false, true));
+        return json($obj->getAll($isAccurate = false, true));
     }
 
     public function getComments($id, $page = 0, $sort = 'new_score'): \think\response\Json
@@ -46,6 +47,4 @@ class Info
     {
         return json(MovieInfo::getPhotos($id, $page, $type));
     }
-
 }
-

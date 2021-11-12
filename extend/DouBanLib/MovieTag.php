@@ -86,20 +86,24 @@ class MovieTag extends Movie
         $_data = parent::curl_get($_url);
         $_ = parent::preg('#<em class="">([\s\S]*?)<\/em>([\s\S]*?)<a href="https:\/\/movie.douban.com\/subject\/([\s\S]*?)\/">([\s\S]*?)<img width="100" alt="([\s\S]*?)" src="([\s\S]*?)" class="">#', $_data, 0);
         $_rank = parent::preg('#<span class="rating_num" property="v:average">([\s\S]*?)<\/span>#', $_data, 1);
-        $_count = count($_[0]);
-        $_return = [];
-        if ($_count) {
-            for ($i = 0; $i < $_count; $i++) {
-                $_return[$i]['em'] = $_[1][$i];
-                $_return[$i]['id'] = $_[3][$i];
-                $_return[$i]['name'] = $_[5][$i];
-                $_return[$i]['rank'] = $_rank[$i];
-                $_return[$i]['img'] = $_[6][$i];
-            }
-        } else {
+        try {
+            $_count = count($_[0]);
             $_return = [];
+            if ($_count) {
+                for ($i = 0; $i < $_count; $i++) {
+                    $_return[$i]['em'] = $_[1][$i];
+                    $_return[$i]['id'] = $_[3][$i];
+                    $_return[$i]['name'] = $_[5][$i];
+                    $_return[$i]['rank'] = $_rank[$i];
+                    $_return[$i]['img'] = $_[6][$i];
+                }
+            } else {
+                $_return = [];
+            }
+            return $_return;
+        } catch (\Throwable $th) {
+            return [];
         }
-        return $_return;
     }
 
     static public function getIndexMovie($MovieType = '热门', $MovieSort = 'recommend', $page_limit = '24', $page = 1): string
@@ -142,6 +146,4 @@ class MovieTag extends Movie
         }
         return $_return;
     }
-}
-
-;
+};
