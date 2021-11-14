@@ -47,4 +47,9 @@ class Info
     {
         return json(MovieInfo::getPhotos($id, $page, $type));
     }
+
+    public function play($url = ""): \think\response\Json
+    {
+        return json(MovieInfo::play($url));
+    }
 }

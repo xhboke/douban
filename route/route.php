@@ -41,8 +41,13 @@ return [
         ':id/movies/[:page]/[:sort]$' => ['movie/celebrity/getCelebrityMovies', ['method' => 'get']],
         ':id/partners/[:page]' => ['movie/celebrity/getCelebrityPartners', ['method' => 'get']],
     ],
+    '[movies]' => [
+        'movie' => ['movie/tag/getMoive', ['method' => 'get']],
+        'tv' => ['movie/tag/getTv', ['method' => 'get']],
+        'nowplaying' => ['movie/tag/getNowplaying', ['method' => 'get']],
+    ],
     'photos/photo/[:id]' => ['movie/photos/getPhoto', ['method' => 'get']],
     'top250/[:page]' => ['movie/movies/getTop250', ['method' => 'get']],
-
+    'play/[:url]' => ['movie/info/play', ['method' => 'get']],
 
 ];

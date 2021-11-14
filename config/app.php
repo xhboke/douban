@@ -54,13 +54,13 @@ return [
     // +----------------------------------------------------------------------
 
     // 默认模块名
-    'default_module' => 'movie',
+    'default_module' => '',
     // 禁止访问模块
     'deny_module_list' => ['common'],
     // 默认控制器名
-    'default_controller' => 'Info',
+    'default_controller' => '',
     // 默认操作名
-    'default_action' => 'getMovieInfo',
+    'default_action' => '',
     // 默认验证器
     'default_validate' => '',
     // 默认的空模块名
@@ -89,7 +89,7 @@ return [
     // IP代理获取标识
     'http_agent_ip' => 'X-REAL-IP',
     // URL伪静态后缀
-    'url_html_suffix' => 'html',
+    'url_html_suffix' => 'json',
     // URL普通方式参数 用于自动生成
     'url_common_param' => true,
     // URL参数方式 0 按名称成对解析 1 按顺序解析
@@ -117,7 +117,7 @@ return [
     // 表单pjax伪装变量
     'var_pjax' => '_pjax',
     // 是否开启请求缓存 true自动缓存 支持设置请求缓存规则
-    'request_cache' => false,
+    'request_cache' => true,
     // 请求缓存有效期
     'request_cache_expire' => 604800,
     // 全局请求缓存排除规则

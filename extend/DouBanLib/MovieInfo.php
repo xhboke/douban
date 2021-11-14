@@ -61,10 +61,15 @@ class MovieInfo extends Movie
         if ($is_play_url == True) {
             $this->All['EpisodeUrl'] = $this->getEpisodeUrl();
         }
-        if ($this->All['EpisodeUrl']['status'] == 404 && $isAccurate == true) {
+        # 201是豆瓣电影无资源，202是资源网无资源
+        if ($this->All['EpisodeUrl']['status'] == 201 && $isAccurate == true) {
             $_ = $this->get_Out_Play_Url($this->All['ChineseName']);
             $this->All['EpisodeUrl']['data'] = $_;
-            $this->All['EpisodeUrl']['status'] = 404;
+            if (count($_) > 0) {
+                $this->All['EpisodeUrl']['status'] = 300;
+            } else {
+                $this->All['EpisodeUrl']['status'] = 567;
+            }
             $this->All['EpisodeUrl']['type'] = 'movie';
         }
         $this->All['OtherLike'] = $this->getOtherLike();
@@ -383,14 +388,14 @@ class MovieInfo extends Movie
                     $price[$key] = $value['url'];
                 }
                 array_multisort($price, SORT_NUMERIC, SORT_DESC, $id, SORT_STRING, SORT_ASC, $data);
-                $this->EpisodeUrl = array('status' => 0, 'type' => 'movie', 'data' => $data);
+                $this->EpisodeUrl = array('status' => 200, 'type' => 'movie', 'data' => $data);
             } elseif (strpos($this->data, '"@type": "TVSeries"') !== false) {
-                $this->EpisodeUrl = array('status' => 0, 'type' => 'tv', 'data' => $this->getTVSeriesEpisodeUrl());
+                $this->EpisodeUrl = array('status' => 200, 'type' => 'tv', 'data' => $this->getTVSeriesEpisodeUrl());
             } else {
-                $this->EpisodeUrl = array('status' => 403);
+                $this->EpisodeUrl = array('status' => 999);
             }
         } else {
-            $this->EpisodeUrl = array('status' => 404);
+            $this->EpisodeUrl = array('status' => 201);
         }
         return $this->EpisodeUrl;
     }
@@ -625,5 +630,18 @@ class MovieInfo extends Movie
         } catch (\Throwable $th) {
             return [];
         }
+    }
+
+    /**
+     * 播放影片
+     *
+     * @static
+     * @access public
+     * @param string $url
+     * @return string
+     */
+    static public function play(string $url)
+    {
+        return json_decode(parent::curl_get('https://json.pangujiexi.com:12345/json.php?url=' . $url));
     }
 }

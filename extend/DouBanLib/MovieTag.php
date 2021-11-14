@@ -124,9 +124,9 @@ class MovieTag extends Movie
      * NowPlaying 正在上映
      * @return array
      */
-    static public function NowPlaying(): array
+    static public function NowPlaying($_city = "chengdu"): array
     {
-        $_city = "chengdu";
+
         $_url = parent::MovieRootUrl . '/cinema/nowplaying/' . $_city . '/';
         $_data = parent::getSubstr(parent::curl_get($_url), '<div id="nowplaying">', '<div id="upcoming">');
         $_ = parent::preg('#id="([\s\S]*?)"([\s\S]*?)data-title="([\s\S]*?)"([\s\S]*?)data-score="([\s\S]*?)"([\s\S]*?)data-star="([\s\S]*?)"([\s\S]*?)data-release="([\s\S]*?)"([\s\S]*?)data-duration="([\s\S]*?)"([\s\S]*?)data-region="([\s\S]*?)"([\s\S]*?)data-director="([\s\S]*?)"([\s\S]*?)data-actors="([\s\S]*?)"([\s\S]*?)data-votecount="([\s\S]*?)"([\s\S]*?)<img src="([\s\S]*?)"#', $_data, 0);
