@@ -12,19 +12,36 @@ namespace app\movie\controller;
 use DouBanLib\MovieInfo;
 use DouBanLib\MovieComment;
 use DouBanLib\MovieReview;
+use think\facade\Cache;
 
 class Info
 {
     public function getMovieInfo($id): \think\response\Json
     {
-        $obj = new MovieInfo($id);
-        return json($obj->getAll($isAccurate = false, true));
+        if (cache('info_' . $id)) {
+            return cache('info_' . $id);
+        } else {
+            $obj = new MovieInfo($id);
+            $data = $obj->getAll($isAccurate = false, true);
+            if (!empty($data['Name'])) {
+                cache('info_' . $id, json($data));
+            }
+            return json($data);
+        }
     }
 
     public function getComments($id, $page = 0, $sort = 'new_score'): \think\response\Json
     {
-        $obj = new MovieComment($id, $page, 'P', $sort);
-        return json($obj->getComments());
+        if (cache('comments_' . $id . '_' . $page . '_' . $sort)) {
+            return cache('comments_' . $id . '_' . $page . '_' . $sort);
+        } else {
+            $obj = new MovieComment($id, $page, 'P', $sort);
+            $data = $obj->getComments();
+            if (!empty($data)) {
+                cache('comments_' . $id . '_' . $page . '_' . $sort, json($data));
+            }
+            return json($data);
+        }
     }
 
     public function getReviews($id, $page = 0, $sort = 'hotest'): \think\response\Json
