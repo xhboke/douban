@@ -272,6 +272,7 @@ class MovieInfo extends Movie
     {
         $_ActorInfo = $this->preg('#<div class="avatar" style="background-image: url\(([\s\S]*?)\)">([\s\S]*?)<span class="name"><a href="https:\/\/movie.douban.com\/celebrity\/([\s\S]*?)/" title="([\s\S]*?)" class="name">([\s\S]*?)<\/a>([\s\S]*?)<span class="role" title="([\s\S]*?)">#', $this->data, 0);
         $_count = $this->getCount($_ActorInfo[0]);
+        $this->Actor = [];
         for ($i = 0; $i < $_count; $i++) {
             $this->Actor[$i]['ActorId'] = $_ActorInfo[3][$i];
             $this->Actor[$i]['ActorName'] = $_ActorInfo[5][$i];
@@ -408,6 +409,7 @@ class MovieInfo extends Movie
         $_img = $this->preg('#<img src="(.*?)" alt="(.*?)" class=""#', $_data, 1);
         $_name = $this->preg('#<img src="(.*?)" alt="(.*?)" class=""#', $_data, 2);
         $_count = $this->getCount($_id);
+        $this->OtherLike = [];
         for ($i = 0; $i < $_count; $i++) {
             $this->OtherLike[$i]['id'] = $_id[$i];
             $this->OtherLike[$i]['name'] = $_name[$i];
