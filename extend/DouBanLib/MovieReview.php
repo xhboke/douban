@@ -32,7 +32,7 @@ class MovieReview extends Movie
     public function getReviews()
     {
         $_data = $this->preg('#<div data-cid="([\s\S]*?)">([\s\S]*?)<img width="24" height="24" src="([\s\S]*?)">([\s\S]*?)<a href="https:\/\/www.douban.com\/people\/([\s\S]*?)\/" class="name">([\s\S]*?)</a>([\s\S]*?)<span content="([\s\S]*?)" class="main-meta">([\s\S]*?)<h2><a href="([\s\S]*?)">([\s\S]*?)<\/a><\/h2>([\s\S]*?)<div class="short-content">([\s\S]*?)</div>([\s\S]*?)<span id="r-useful_count-([\s\S]*?)">([\s\S]*?)</span>([\s\S]*?)<span id="r-useless_count-([\s\S]*?)">([\s\S]*?)<\/span>#', $this->data, 0);
-        $_count = count($_data[1]);
+        $_count = $this->getCount($_data[1]);
         for ($i = 0; $i < $_count; $i++) {
             $this->Reviews[$i]['id'] = $_data[1][$i];
             $this->Reviews[$i]['image'] = $_data[3][$i];

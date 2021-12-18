@@ -42,26 +42,22 @@ class Photo extends Movie
      */
     public function getAll(): array
     {
-        try {
-            $_return = [];
-            $_return['id'] = $this->id;
-            $_return['title'] = $this->preg('#<h1><span id="title-anchor">([\s\S]*?)<\/span>#', $this->data, 1)[0];
-            $_return['desc'] = trim(strip_tags($this->preg('#<div class="photo_descri">([\s\S]*?)</div>#', $this->data, 1)[0]));
-            $_return['fav-num'] = $this->preg('#<span class="fav-num"([\s\S]*?)<a href="\#">([\s\S]*?)<\/a>#', $this->data, 2)[0];
+        $_return = [];
+        $_return['id'] = $this->id;
+        $_return['title'] = $this->preg('#<h1><span id="title-anchor">([\s\S]*?)<\/span>#', $this->data, 1)[0];
+        $_return['desc'] = trim(strip_tags($this->preg('#<div class="photo_descri">([\s\S]*?)</div>#', $this->data, 1)[0]));
+        $_return['fav-num'] = $this->preg('#<span class="fav-num"([\s\S]*?)<a href="\#">([\s\S]*?)<\/a>#', $this->data, 2)[0];
 
-            $_item = parent::preg('#<div class="comment-item"([\s\S]*?)<div class="group_banned">#', $this->data, 1);
-            $_count = count($_item);
-            for ($i = 0; $i < $_count; $i++) {
-                $_return['comment'][$i]['id'] = parent::preg('#id=([\s\S]*?) data-cid#', $_item[$i], 1)[0];
-                $_return['comment'][$i]['name'] = parent::preg('#alt="([\s\S]*?)"\/>#', $_item[$i], 1)[0];
-                $_return['comment'][$i]['avater'] = parent::preg('#src="([\s\S]*?)"#', $_item[$i], 1)[0];
-                $_return['comment'][$i]['time'] = parent::preg('#<span class="">([\s\S]*?)<\/span>#', $_item[$i], 1)[0];
-                $_return['comment'][$i]['content'] = parent::preg('#<p class="">([\s\S]*?)<\/p>#', $_item[$i], 1)[0];
-                $_return['comment'][$i]['quote'] = parent::preg('#<span class="all">([\s\S]*?)<\/span>#', $_item[$i], 1)[0];
-            }
-            return $_return;
-        } catch (\Throwable $th) {
-            return [];
+        $_item = parent::preg('#<div class="comment-item"([\s\S]*?)<div class="group_banned">#', $this->data, 1);
+        $_count = parent::getCount($_item);
+        for ($i = 0; $i < $_count; $i++) {
+            $_return['comment'][$i]['id'] = parent::preg('#id=([\s\S]*?) data-cid#', $_item[$i], 1)[0];
+            $_return['comment'][$i]['name'] = parent::preg('#alt="([\s\S]*?)"\/>#', $_item[$i], 1)[0];
+            $_return['comment'][$i]['avater'] = parent::preg('#src="([\s\S]*?)"#', $_item[$i], 1)[0];
+            $_return['comment'][$i]['time'] = parent::preg('#<span class="">([\s\S]*?)<\/span>#', $_item[$i], 1)[0];
+            $_return['comment'][$i]['content'] = parent::preg('#<p class="">([\s\S]*?)<\/p>#', $_item[$i], 1)[0];
+            $_return['comment'][$i]['quote'] = parent::preg('#<span class="all">([\s\S]*?)<\/span>#', $_item[$i], 1)[0];
         }
+        return $_return;
     }
 }

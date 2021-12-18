@@ -25,4 +25,13 @@ class Movie extends DouBan
             return TRUE;
         }
     }
+
+    public function getCount($array)
+    {
+        if (empty($array)) {
+            return 0;
+        } else {
+            return count($array);
+        }
+    }
 }

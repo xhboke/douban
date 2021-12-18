@@ -270,20 +270,16 @@ class MovieInfo extends Movie
      */
     public function getActor(): array
     {
-        try {
-            $_ActorInfo = $this->preg('#<div class="avatar" style="background-image: url\(([\s\S]*?)\)">([\s\S]*?)<span class="name"><a href="https:\/\/movie.douban.com\/celebrity\/([\s\S]*?)/" title="([\s\S]*?)" class="name">([\s\S]*?)<\/a>([\s\S]*?)<span class="role" title="([\s\S]*?)">#', $this->data, 0);
-            $_count = count($_ActorInfo[0]);
-            for ($i = 0; $i < $_count; $i++) {
-                $this->Actor[$i]['ActorId'] = $_ActorInfo[3][$i];
-                $this->Actor[$i]['ActorName'] = $_ActorInfo[5][$i];
-                $this->Actor[$i]['ActorNameChinese'] = $_ActorInfo[4][$i];
-                $this->Actor[$i]['ActorImage'] = $_ActorInfo[1][$i];
-                $this->Actor[$i]['ActorRole'] = $_ActorInfo[7][$i];
-            }
-            return $this->Actor;
-        } catch (\Throwable $th) {
-            return array();
+        $_ActorInfo = $this->preg('#<div class="avatar" style="background-image: url\(([\s\S]*?)\)">([\s\S]*?)<span class="name"><a href="https:\/\/movie.douban.com\/celebrity\/([\s\S]*?)/" title="([\s\S]*?)" class="name">([\s\S]*?)<\/a>([\s\S]*?)<span class="role" title="([\s\S]*?)">#', $this->data, 0);
+        $_count = $this->getCount($_ActorInfo[0]);
+        for ($i = 0; $i < $_count; $i++) {
+            $this->Actor[$i]['ActorId'] = $_ActorInfo[3][$i];
+            $this->Actor[$i]['ActorName'] = $_ActorInfo[5][$i];
+            $this->Actor[$i]['ActorNameChinese'] = $_ActorInfo[4][$i];
+            $this->Actor[$i]['ActorImage'] = $_ActorInfo[1][$i];
+            $this->Actor[$i]['ActorRole'] = $_ActorInfo[7][$i];
         }
+        return $this->Actor;
     }
 
     /**
@@ -411,17 +407,13 @@ class MovieInfo extends Movie
         $_id = $this->preg('#<a href="https:\/\/movie.douban.com\/subject\/(.*?)\/\?from=subject-page" class=""#', $_data, 1);
         $_img = $this->preg('#<img src="(.*?)" alt="(.*?)" class=""#', $_data, 1);
         $_name = $this->preg('#<img src="(.*?)" alt="(.*?)" class=""#', $_data, 2);
-        try {
-            $_count = count($_id);
-            for ($i = 0; $i < $_count; $i++) {
-                $this->OtherLike[$i]['id'] = $_id[$i];
-                $this->OtherLike[$i]['name'] = $_name[$i];
-                $this->OtherLike[$i]['img'] = $_img[$i];
-            }
-            return $this->OtherLike;
-        } catch (\Throwable $th) {
-            return array();
+        $_count = $this->getCount($_id);
+        for ($i = 0; $i < $_count; $i++) {
+            $this->OtherLike[$i]['id'] = $_id[$i];
+            $this->OtherLike[$i]['name'] = $_name[$i];
+            $this->OtherLike[$i]['img'] = $_img[$i];
         }
+        return $this->OtherLike;
     }
 
     /**
@@ -542,28 +534,24 @@ class MovieInfo extends Movie
      */
     static public function getCelebrities(int $id): array
     {
-        try {
-            $_data = parent::curl_get(parent::MovieRootUrl . '/subject/' . $id . '/celebrities');
-            $_item = parent::preg('#<li class="celebrity">([\s\S]*?)<\/li>#', $_data, 1);
-            $_count = count($_item);
-            $_return = [];
-            for ($i = 0; $i < $_count; $i++) {
-                $_return[$i]['id'] = parent::preg('#celebrity\/([\s\S]*?)\/" title="([\s\S]*?)" class="name">#', $_item[$i], 1)[0];
-                $_return[$i]['name'] = parent::preg('#" class="name">([\s\S]*?)<\/a><\/span>#', $_item[$i], 1)[0];
-                $_return[$i]['image'] = parent::preg('#background-image: url\(([\s\S]*?)\)">#', $_item[$i], 1)[0];
-                $_return[$i]['role'] = parent::preg('#<span class="role" title="([\s\S]*?)">#', $_item[$i], 1)[0];
-                $_works = parent::preg('#subject\/([\s\S]*?)\/" target([\s\S]*?)>([\s\S]*?)<\/a>#', $_item[$i], 0);
-                $_count_works = count($_works[1]);
-                $_return[$i]['works'] = [];
-                for ($j = 0; $j < $_count_works; $j++) {
-                    $_return[$i]['works'][$j]['id'] = $_works[1][$j];
-                    $_return[$i]['works'][$j]['name'] = $_works[3][$j];
-                }
+        $_data = parent::curl_get(parent::MovieRootUrl . '/subject/' . $id . '/celebrities');
+        $_item = parent::preg('#<li class="celebrity">([\s\S]*?)<\/li>#', $_data, 1);
+        $_count = parent::getCount($_item);
+        $_return = [];
+        for ($i = 0; $i < $_count; $i++) {
+            $_return[$i]['id'] = parent::preg('#celebrity\/([\s\S]*?)\/" title="([\s\S]*?)" class="name">#', $_item[$i], 1)[0];
+            $_return[$i]['name'] = parent::preg('#" class="name">([\s\S]*?)<\/a><\/span>#', $_item[$i], 1)[0];
+            $_return[$i]['image'] = parent::preg('#background-image: url\(([\s\S]*?)\)">#', $_item[$i], 1)[0];
+            $_return[$i]['role'] = parent::preg('#<span class="role" title="([\s\S]*?)">#', $_item[$i], 1)[0];
+            $_works = parent::preg('#subject\/([\s\S]*?)\/" target([\s\S]*?)>([\s\S]*?)<\/a>#', $_item[$i], 0);
+            $_count_works = parent::getCount($_works[1]);
+            $_return[$i]['works'] = [];
+            for ($j = 0; $j < $_count_works; $j++) {
+                $_return[$i]['works'][$j]['id'] = $_works[1][$j];
+                $_return[$i]['works'][$j]['name'] = $_works[3][$j];
             }
-            return $_return;
-        } catch (\Throwable $th) {
-            return [];
         }
+        return $_return;
     }
 
     /**
@@ -577,27 +565,24 @@ class MovieInfo extends Movie
      */
     static public function getAllPhotos(string $id): array
     {
-        try {
-            $_data = parent::getSubstr(parent::curl_get(parent::MovieRootUrl . "/subject/" . $id . '/all_photos'), '<div id="content">', '<div class="aside">');
-            $_item = parent::preg('#<h2>([\s\S]*?)&nbsp;([\s\S]*?)type=([\s\S]*?)" target="_self">([\s\S]*?)<\/a>#', $_data, 0);
-            $_count = count($_item[1]);
-            $_return = [];
-            for ($i = 0; $i < $_count; $i++) {
-                $_return[$i]['name'] = trim($_item[1][$i]);
-                $_return[$i]['type'] = $_item[3][$i];
-                $_return[$i]['count'] = $_item[4][$i];
-                $_return[$i]['image'] = [];
-                $_image = parent::preg('#photos\/photo\/([\s\S]*?)\/">([\s\S]*?)<img src="([\s\S]*?)">#', parent::getSubstr($_data, $_return[$i]['name'], '</ul>'), 0);
-                $_count_image = isset($_image[1]) ? count($_image[1]) : 0;
-                for ($j = 0; $j < $_count_image; $j++) {
-                    $_return[$i]['image'][$j]['id'] = $_image[1][$j];
-                    $_return[$i]['image'][$j]['url'] = $_image[3][$j];
-                }
+
+        $_data = parent::getSubstr(parent::curl_get(parent::MovieRootUrl . "/subject/" . $id . '/all_photos'), '<div id="content">', '<div class="aside">');
+        $_item = parent::preg('#<h2>([\s\S]*?)&nbsp;([\s\S]*?)type=([\s\S]*?)" target="_self">([\s\S]*?)<\/a>#', $_data, 0);
+        $_count = parent::getCount($_item[1]);
+        $_return = [];
+        for ($i = 0; $i < $_count; $i++) {
+            $_return[$i]['name'] = trim($_item[1][$i]);
+            $_return[$i]['type'] = $_item[3][$i];
+            $_return[$i]['count'] = $_item[4][$i];
+            $_return[$i]['image'] = [];
+            $_image = parent::preg('#photos\/photo\/([\s\S]*?)\/">([\s\S]*?)<img src="([\s\S]*?)">#', parent::getSubstr($_data, $_return[$i]['name'], '</ul>'), 0);
+            $_count_image = isset($_image[1]) ? count($_image[1]) : 0;
+            for ($j = 0; $j < $_count_image; $j++) {
+                $_return[$i]['image'][$j]['id'] = $_image[1][$j];
+                $_return[$i]['image'][$j]['url'] = $_image[3][$j];
             }
-            return $_return;
-        } catch (\Throwable $th) {
-            return [];
         }
+        return $_return;
     }
 
     /**
@@ -614,22 +599,18 @@ class MovieInfo extends Movie
      */
     static public function getPhotos(string $id, $page = 0, string $type = 'S', string $sort = 'like'): array
     {
-        try {
-            $_data = parent::curl_get(parent::MovieRootUrl . "/subject/" . $id . '/photos' . '?start=' . 30 * $page . '&type=' . $type . '&sortby=' . $sort);
-            $_item = parent::preg('#data-id="([\s\S]*?)">([\s\S]*?)<\/li>#', $_data, 0);
-            $_count = count($_item[1]);
-            $_return = [];
-            for ($i = 0; $i < $_count; $i++) {
-                $_return[$i]['id'] = $_item[1][$i];
-                $_return[$i]['image'] = parent::preg('#<img src="([\s\S]*?)" \/>#', $_item[2][$i], 1)[0];
-                $_return[$i]['size'] = trim(parent::preg('#<div class="prop">([\s\S]*?)<\/div>#', $_item[2][$i], 1)[0]);
-                $_return[$i]['desc'] = trim(preg_replace('#<a([\s\S]*?)<\/a>#', '', parent::preg('#<div class="name">([\s\S]*?)<\/div>#', $_item[2][$i], 1)[0]));
-                $_return[$i]['reply'] = trim(parent::preg('#comments">([\s\S]*?)<\/a>#', $_item[2][$i], 1)[0]);
-            }
-            return $_return;
-        } catch (\Throwable $th) {
-            return [];
+        $_data = parent::curl_get(parent::MovieRootUrl . "/subject/" . $id . '/photos' . '?start=' . 30 * $page . '&type=' . $type . '&sortby=' . $sort);
+        $_item = parent::preg('#data-id="([\s\S]*?)">([\s\S]*?)<\/li>#', $_data, 0);
+        $_count = parent::getCount($_item[1]);
+        $_return = [];
+        for ($i = 0; $i < $_count; $i++) {
+            $_return[$i]['id'] = $_item[1][$i];
+            $_return[$i]['image'] = parent::preg('#<img src="([\s\S]*?)" \/>#', $_item[2][$i], 1)[0];
+            $_return[$i]['size'] = trim(parent::preg('#<div class="prop">([\s\S]*?)<\/div>#', $_item[2][$i], 1)[0]);
+            $_return[$i]['desc'] = trim(preg_replace('#<a([\s\S]*?)<\/a>#', '', parent::preg('#<div class="name">([\s\S]*?)<\/div>#', $_item[2][$i], 1)[0]));
+            $_return[$i]['reply'] = trim(parent::preg('#comments">([\s\S]*?)<\/a>#', $_item[2][$i], 1)[0]);
         }
+        return $_return;
     }
 
     /**

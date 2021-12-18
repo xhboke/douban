@@ -130,7 +130,7 @@ class MovieTag extends Movie
         $_url = parent::MovieRootUrl . '/cinema/nowplaying/' . $_city . '/';
         $_data = parent::getSubstr(parent::curl_get($_url), '<div id="nowplaying">', '<div id="upcoming">');
         $_ = parent::preg('#id="([\s\S]*?)"([\s\S]*?)data-title="([\s\S]*?)"([\s\S]*?)data-score="([\s\S]*?)"([\s\S]*?)data-star="([\s\S]*?)"([\s\S]*?)data-release="([\s\S]*?)"([\s\S]*?)data-duration="([\s\S]*?)"([\s\S]*?)data-region="([\s\S]*?)"([\s\S]*?)data-director="([\s\S]*?)"([\s\S]*?)data-actors="([\s\S]*?)"([\s\S]*?)data-votecount="([\s\S]*?)"([\s\S]*?)<img src="([\s\S]*?)"#', $_data, 0);
-        $_count = count($_[1]);
+        $_count = parent::getCount($_[1]);
         $_return = [];
         for ($i = 0; $i < $_count; $i++) {
             $_return[$i]['id'] = $_[1][$i];

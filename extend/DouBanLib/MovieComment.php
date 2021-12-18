@@ -45,7 +45,7 @@ class MovieComment extends Movie
     {
         try {
             $_data = $this->preg('#<div class="comment-item " data-cid="([\s\S]*?)">([\s\S]*?)<img src="([\s\S]*?)" class="" />([\s\S]*?)<span class="votes vote-count">([\s\S]*?)<\/span>([\s\S]*?)<a href="https:\/\/www.douban.com\/people\/([\s\S]*?)/" class="">([\s\S]*?)<\/a>([\s\S]*?)<span class="allstar([\s\S]*?)0 rating([\s\S]*?)<span class="comment-time " title="([\s\S]*?)">([\s\S]*?)<span class="short">([\s\S]*?)<\/span>#', $this->data, 0);
-            $_count = count($_data[1]);
+            $_count = $this->getCount($_data[1]);
             for ($i = 0; $i < $_count; $i++) {
                 $this->Comments[20 * $this->page + $i]['id'] = $_data[1][$i];
                 $this->Comments[20 * $this->page + $i]['image'] = $_data[3][$i];
