@@ -48,6 +48,7 @@ class MovieInfo extends Movie
         $this->All['Region'] = $this->get_region();
         $this->All['Other_name'] = $this->get_OtherName();
         $this->All['Rating'] = $this->getRating();
+        $this->All['RatingPeople'] = $this->getRatingPeople();
         $this->All['Votes'] = $this->getVotes();
         $this->All['Description'] = $this->getDescription();
         $this->All['Episode'] = $this->getEpisode();
@@ -366,6 +367,17 @@ class MovieInfo extends Movie
         $_ = $_ == null ? '' : $_;
         $this->region = str_replace(" ", '', strip_tags($_));
         return $this->region;
+    }
+
+    /**
+     * 获取各评分人数
+     * @access public
+     * @return array
+     */
+    public function getRatingPeople(): array
+    {
+        $this->RatingPeople = $this->preg('#<span class="rating_per">([\s\S]*?)<\/span>#', $this->data, 1);
+        return $this->RatingPeople;
     }
 
     /**
