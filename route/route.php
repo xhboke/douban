@@ -17,9 +17,10 @@ return [
         'search_suggest' => '(.*?)',
         'name' => '(.*?)',
         'page' => '\d+',
+        'flag' => '\d+',
     ],
     '[subject]' => [
-        ':id$' => ['movie/info/getMovieInfo', ['method' => 'get']],
+        ':id/[:flag]$' => ['movie/info/getMovieInfo', ['method' => 'get']],
         ':id/comments/[:page]/[:sort]$' => ['movie/info/getComments', ['method' => 'get']],
         ':id/reviews/[:page]/[:sort]$' => ['movie/info/getReviews', ['method' => 'get']],
         ':id/celebrities$' => ['movie/info/getCelebrities', ['method' => 'get']],

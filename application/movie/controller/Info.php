@@ -16,8 +16,11 @@ use think\facade\Cache;
 
 class Info
 {
-    public function getMovieInfo($id): \think\response\Json
+    public function getMovieInfo($id, $flag = 0): \think\response\Json
     {
+        if ($flag == 1) {
+            cache('info_' . $id, NULL);
+        }
         if (cache('info_' . $id)) {
             return cache('info_' . $id);
         } else {
