@@ -31,7 +31,7 @@ class MovieSearch extends Movie
     {
         $this->name = $name;
         $this->page = $page;
-        $this->url = parent::_MovieRootUrl . '/j/search/?q=' . $name . '&t=movie&p=' . $page;
+        $this->url = parent::_MovieRootUrl . '/j/search/?q=' . $name . '&t=1002&p=' . $page;
         $this->data = json_decode($this->curl_get($this->url));
         $this->Count = $this->data->count;
     }
