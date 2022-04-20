@@ -25,6 +25,10 @@ class DouBan
      */
     public static function curl_get(string $url): string
     {
+        $headers = array();
+        $headers[] = 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8';
+        $headers[] = 'Host: movie.douban.com';
+        $headers[] = 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Safari/605.1.15';
         $oCurl = curl_init();
         if (stripos($url, "https://") !== FALSE) {
             curl_setopt($oCurl, CURLOPT_SSL_VERIFYPEER, FALSE);
@@ -33,7 +37,8 @@ class DouBan
         }
         curl_setopt($oCurl, CURLOPT_URL, $url);
         curl_setopt($oCurl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($oCurl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36 Edg/95.0.1020.53");
+        curl_setopt($oCurl, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($oCurl, CURLOPT_FOLLOWLOCATION, true);
         // curl_setopt($oCurl, CURLOPT_PROXY, "127.0.0.1");
         // curl_setopt($oCurl, CURLOPT_PROXYPORT, "10809");
         if (DouBan::Cookie) curl_setopt($oCurl, CURLOPT_COOKIE, DouBan::Cookie);
