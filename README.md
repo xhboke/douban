@@ -39,7 +39,7 @@ print(
 ~~~
 
 
-* 本地测试
+* PHP 本地测试
 
 下载代码
 
@@ -59,7 +59,7 @@ php think run
 http://localhost:8000
 ~~~
 
-* 服务器
+* PHP 服务器
 
 上传代码，设置 `public` 为运行目录，设置伪静态
 
